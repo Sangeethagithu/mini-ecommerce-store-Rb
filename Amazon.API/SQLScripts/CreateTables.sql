@@ -1,0 +1,19 @@
+﻿CREATE TABLE Categories
+(
+    Id UNIQUEIDENTIFIER PRIMARY KEY,
+    Name NVARCHAR(200) NOT NULL
+)
+
+CREATE TABLE Products
+(
+    Id UNIQUEIDENTIFIER PRIMARY KEY,
+    Name NVARCHAR(200) NOT NULL,
+    Description NVARCHAR(MAX),
+    Price DECIMAL(18,2),
+    StockQuantity INT,
+    ImageUrl NVARCHAR(MAX),
+    CategoryId UNIQUEIDENTIFIER,
+
+    FOREIGN KEY (CategoryId)
+    REFERENCES Categories(Id)
+)
