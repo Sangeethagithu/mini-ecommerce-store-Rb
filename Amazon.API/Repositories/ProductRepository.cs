@@ -150,5 +150,49 @@ namespace Amazon.API.Repositories
 
             connection.Close();
         }
+
+        //search product product listing
+        public List<Product> SearchProducts(string name)
+        {
+            List<Product> products = new List<Product>();
+
+            string connectionString =
+                configuration.GetConnectionString("DefaultConnection")!;
+
+            SqlConnection connection =
+                new SqlConnection(connectionString);
+
+            SqlCommand command =
+                new SqlCommand("SearchProducts", connection);
+
+            command.CommandType = CommandType.StoredProcedure;
+
+            command.Parameters.AddWithValue("@Name", name);
+
+            connection.Open();
+
+            SqlDataReader reader =
+                command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Product product = new Product
+                {
+                    Id = Guid.Parse(reader["Id"].ToString()!),
+                    Name = reader["Name"].ToString()!,
+                    Description = reader["Description"].ToString()!,
+                    Price = Convert.ToDecimal(reader["Price"]),
+                    StockQuantity = Convert.ToInt32(reader["StockQuantity"]),
+                    ImageUrl = reader["ImageUrl"].ToString()!,
+                    CategoryId = Guid.Parse(reader["CategoryId"].ToString()!)
+                };
+
+                products.Add(product);
+            }
+
+            connection.Close();
+
+            return products;
+        }
     }
 }

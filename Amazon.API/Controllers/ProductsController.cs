@@ -54,5 +54,16 @@ namespace Amazon.API.Controllers
 
             return Ok("Product deleted successfully");
         }
+
+
+        //product search
+        [HttpGet("search")]
+        public IActionResult SearchProducts(string name)
+        {
+            var products = productRepository.SearchProducts(name);
+
+            return Ok(products);
+        }
+
     }
 }
