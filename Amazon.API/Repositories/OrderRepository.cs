@@ -12,7 +12,7 @@ namespace Amazon.API.Repositories
         {
             this.configuration = configuration;
         }
-
+        //create order
         public void Checkout(CheckoutDto dto)
         {
             decimal total = 0;
