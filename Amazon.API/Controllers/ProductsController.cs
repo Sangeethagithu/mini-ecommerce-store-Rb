@@ -65,5 +65,24 @@ namespace Amazon.API.Controllers
             return Ok(products);
         }
 
+        //restocking products
+        [HttpPut("stock")]
+        public IActionResult UpdateStock(
+    UpdateStockDto dto)
+        {
+            productRepository.UpdateStock(dto);
+
+            return Ok(
+                "Product stock updated successfully");
+        }
+        //low stock alert
+        [HttpGet("low-stock")]
+        public IActionResult GetLowStockProducts()
+        {
+            var products =
+                productRepository.GetLowStockProducts();
+
+            return Ok(products);
+        }
     }
 }

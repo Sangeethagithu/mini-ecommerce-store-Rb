@@ -194,5 +194,90 @@ namespace Amazon.API.Repositories
 
             return products;
         }
+
+        //updating the stock restocking
+        public void UpdateStock(
+    UpdateStockDto dto)
+        {
+            string connectionString =
+                configuration.GetConnectionString(
+                    "DefaultConnection")!;
+
+            SqlConnection connection =
+                new SqlConnection(connectionString);
+
+            SqlCommand command =
+                new SqlCommand(
+                    "UpdateProductStock",
+                    connection);
+
+            command.CommandType =
+                CommandType.StoredProcedure;
+
+            command.Parameters.AddWithValue(
+                "@ProductId",
+                dto.ProductId);
+
+            command.Parameters.AddWithValue(
+                "@StockQuantity",
+                dto.StockQuantity);
+
+            connection.Open();
+
+            command.ExecuteNonQuery();
+
+            connection.Close();
+        }
+
+        //low stock allert
+        public List<LowStockProductDto>
+    GetLowStockProducts()
+        {
+            List<LowStockProductDto> products =
+                new List<LowStockProductDto>();
+
+            string connectionString =
+                configuration.GetConnectionString(
+                    "DefaultConnection")!;
+
+            SqlConnection connection =
+                new SqlConnection(connectionString);
+
+            SqlCommand command =
+                new SqlCommand(
+                    "GetLowStockProducts",
+                    connection);
+
+            command.CommandType =
+                CommandType.StoredProcedure;
+
+            connection.Open();
+
+            SqlDataReader reader =
+                command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                LowStockProductDto product =
+                    new LowStockProductDto
+                    {
+                        Id = Guid.Parse(
+                            reader["Id"].ToString()!),
+
+                        Name =
+                            reader["Name"].ToString()!,
+
+                        StockQuantity =
+                            Convert.ToInt32(
+                                reader["StockQuantity"])
+                    };
+
+                products.Add(product);
+            }
+
+            connection.Close();
+
+            return products;
+        }
     }
 }
