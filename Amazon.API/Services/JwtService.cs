@@ -45,7 +45,7 @@ namespace Amazon.API.Services
             var token =
                 new JwtSecurityToken(//actual jwt object
                     issuer:
-                        configuration["Jwt:Issuer"],
+                        configuration["Jwt:Issuer"], 
 
                     audience:
                         configuration["Jwt:Audience"],

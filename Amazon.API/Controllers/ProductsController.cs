@@ -2,7 +2,7 @@
 using Amazon.API.Models.DTOs.Product;
 using Amazon.API.Repositories;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.AspNetCore.Authorization;
 namespace Amazon.API.Controllers
 {
     [ApiController]
@@ -28,7 +28,12 @@ namespace Amazon.API.Controllers
 
         //post operation
 
-        [HttpPost] //http request sent data to server
+        //http request sent data to server
+
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+
         public IActionResult AddProduct(CreateProductDto dto)
         {
             productRepository.AddProduct(dto);
@@ -37,6 +42,7 @@ namespace Amazon.API.Controllers
         }
 
         //updating PUT id comes from url
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public IActionResult UpdateProduct(Guid id, UpdateProductDto dto)
         {
@@ -47,6 +53,7 @@ namespace Amazon.API.Controllers
 
 
         //delete with id
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public IActionResult DeleteProduct(Guid id)
         {
@@ -66,6 +73,7 @@ namespace Amazon.API.Controllers
         }
 
         //restocking products
+        [Authorize(Roles = "Admin")]
         [HttpPut("stock")]
         public IActionResult UpdateStock(
     UpdateStockDto dto)
