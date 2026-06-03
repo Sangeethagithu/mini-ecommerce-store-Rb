@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -16,13 +16,14 @@ export class LoginComponent {
   password: string = '';
 
   constructor(
-    private authService: AuthService
+    private authService: AuthService ,//need a authservice ibject
+    private router: Router
   ) {
   }
 
   login() {
 
-    const data = {
+    const data = {     //create obj
       email: this.email,
       password: this.password
     };
@@ -38,7 +39,7 @@ export class LoginComponent {
             response
           );
 
-          alert('Login Successful');
+          this.router.navigate(['/products']);
         },
         (error) => {
 

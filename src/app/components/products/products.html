@@ -1,0 +1,17 @@
+<h2>Products</h2>
+<button routerLink="/cart">
+  View Cart
+</button>
+
+<br>
+<br>
+<div *ngFor="let product of products">
+  <h3>{{ product.name }}</h3>
+  <p>{{ product.description }}</p>
+  <p>Price: ₹{{ product.price }}</p>
+  <p>Stock: {{ product.stockQuantity }}</p>
+    <button (click)="addToCart(product.id)">
+    Add To Cart
+  </button>
+  <hr>
+</div>

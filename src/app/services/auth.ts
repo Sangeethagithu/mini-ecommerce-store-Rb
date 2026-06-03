@@ -12,7 +12,7 @@ export class AuthService {
   }
 
   login(data: any) {
-    return this.http.post(
+    return this.http.post(//return observable"request sent wait i will notify" not token
       'https://localhost:7113/api/Auth/login',
       data,
       {
