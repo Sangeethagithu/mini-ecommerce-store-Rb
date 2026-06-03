@@ -2,6 +2,6 @@
 {
     public class CheckoutDto
     {
-        public Guid CartId { get; set; }
+       
     }
 }

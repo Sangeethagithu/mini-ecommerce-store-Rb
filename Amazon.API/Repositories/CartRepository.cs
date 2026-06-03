@@ -14,15 +14,112 @@ namespace Amazon.API.Repositories
         {
             this.configuration = configuration;
         }
+        public Guid? GetCartIdByEmail(string email) //view cart using email
+        {
+            string connectionString =
+                configuration.GetConnectionString(
+                    "DefaultConnection")!;
+
+            SqlConnection connection =
+                new SqlConnection(connectionString);
+
+            SqlCommand command =
+                new SqlCommand(
+                    "SELECT Id FROM Carts WHERE UserEmail = @Email",
+                    connection);
+
+            command.Parameters.AddWithValue(
+                "@Email",
+                email);
+
+            connection.Open();
+
+            object result =
+                command.ExecuteScalar();
+
+            connection.Close();
+
+            if (result == null)
+            {
+                return null;
+            }
+
+            return Guid.Parse(result.ToString()!);
+        }
+
+        //cart creation using api automatically
+        public Guid GetOrCreateCart(string email)
+        {
+            string connectionString =
+                configuration.GetConnectionString(
+                    "DefaultConnection")!;
+
+            SqlConnection connection =
+                new SqlConnection(connectionString);
+
+            connection.Open();
+
+            SqlCommand findCommand =
+                new SqlCommand(
+                    "SELECT Id FROM Carts WHERE UserEmail = @Email",
+                    connection);
+
+            findCommand.Parameters.AddWithValue(
+                "@Email",
+                email);
+
+            object result =
+                findCommand.ExecuteScalar();
+
+            if (result != null)
+            {
+                Guid cartId =
+                    Guid.Parse(result.ToString()!);
+
+                connection.Close();
+
+                return cartId;
+            }
+
+            Guid newCartId =
+                Guid.NewGuid();
+
+            SqlCommand createCommand =
+                new SqlCommand(
+                    @"INSERT INTO Carts
+              (Id, UserEmail)
+              VALUES
+              (@Id, @Email)",
+                    connection);
+
+            createCommand.Parameters.AddWithValue(
+                "@Id",
+                newCartId);
+
+            createCommand.Parameters.AddWithValue(
+                "@Email",
+                email);
+
+            createCommand.ExecuteNonQuery();
+
+            connection.Close();
+
+            return newCartId;
+        }
 
         //add to cart
-        public void AddToCart(AddToCartDto dto)
+        public void AddToCart(
+            AddToCartDto dto,
+            string email)
         {
             string connectionString =
                 configuration.GetConnectionString("DefaultConnection")!;
 
             SqlConnection connection =
                 new SqlConnection(connectionString);
+
+            Guid cartId =
+    GetOrCreateCart(email);
 
             SqlCommand command =
                 new SqlCommand("AddToCart", connection);
@@ -31,7 +128,9 @@ namespace Amazon.API.Repositories
 
             command.Parameters.AddWithValue("@Id", Guid.NewGuid());
 
-            command.Parameters.AddWithValue("@CartId", dto.CartId);
+            command.Parameters.AddWithValue(
+     "@CartId",
+     cartId);
 
             command.Parameters.AddWithValue("@ProductId", dto.ProductId);
 

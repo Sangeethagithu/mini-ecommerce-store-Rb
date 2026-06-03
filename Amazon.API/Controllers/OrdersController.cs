@@ -1,7 +1,10 @@
 ﻿using Amazon.API.Models.DTOs.Order;
 using Amazon.API.Repositories;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+
+
 namespace Amazon.API.Controllers
 {
     [Authorize]
@@ -19,14 +22,17 @@ namespace Amazon.API.Controllers
         }
 
         [HttpPost("checkout")]
-        public IActionResult Checkout(
-            CheckoutDto dto)
+        public IActionResult Checkout()
         {
-            orderRepository.Checkout(dto);
+            string email =
+                User.FindFirst(
+                    ClaimTypes.Email)?.Value!;
 
-            return Ok("Order placed successfully");
+            orderRepository.Checkout(email);
+
+            return Ok(
+                "Order placed successfully");
         }
-
         //order status 
         [HttpPut("status")]
         public IActionResult UpdateOrderStatus(
@@ -41,8 +47,13 @@ namespace Amazon.API.Controllers
         [HttpGet]
         public IActionResult GetAllOrders()
         {
+            string email =
+                User.FindFirst(
+                    ClaimTypes.Email)?.Value!;
+
             var orders =
-                orderRepository.GetAllOrders();
+                orderRepository.GetAllOrders(
+                    email);
 
             return Ok(orders);
         }

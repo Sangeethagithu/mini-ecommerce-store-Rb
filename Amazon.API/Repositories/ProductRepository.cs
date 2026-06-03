@@ -3,17 +3,22 @@ using Amazon.API.Model.Domain;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using Amazon.API.Models.DTOs.Product;
-
+using Microsoft.AspNetCore.Hosting;
 
 namespace Amazon.API.Repositories
 {
     public class ProductRepository
     {
         private readonly IConfiguration configuration;
+        private readonly IWebHostEnvironment environment;
 
-        public ProductRepository(IConfiguration configuration)
+        public ProductRepository(
+            IConfiguration configuration,
+            IWebHostEnvironment environment)
         {
             this.configuration = configuration;
+
+            this.environment = environment;
         }
         //GET operation
         public List<Product> GetAllProducts()
@@ -63,8 +68,32 @@ namespace Amazon.API.Repositories
             string connectionString =
                 configuration.GetConnectionString("DefaultConnection")!;
 
+            string fileName =
+    Guid.NewGuid().ToString() +
+    Path.GetExtension(
+        dto.Image.FileName);
+
+            string imagePath =
+                Path.Combine(
+                    environment.ContentRootPath,
+                    "Images",
+                    fileName);
+
+            using (FileStream stream =
+                new FileStream(
+                    imagePath,
+                    FileMode.Create))
+            {
+                dto.Image.CopyTo(stream);
+            }
+
+
             SqlConnection connection =
                 new SqlConnection(connectionString);
+
+
+
+
 
             SqlCommand command =
                 new SqlCommand("AddProduct", connection);
@@ -81,7 +110,9 @@ namespace Amazon.API.Repositories
 
             command.Parameters.AddWithValue("@StockQuantity", dto.StockQuantity);
 
-            command.Parameters.AddWithValue("@ImageUrl", dto.ImageUrl);
+            command.Parameters.AddWithValue(
+    "@ImageUrl",
+    fileName);
 
             command.Parameters.AddWithValue("@CategoryId", dto.CategoryId);
 

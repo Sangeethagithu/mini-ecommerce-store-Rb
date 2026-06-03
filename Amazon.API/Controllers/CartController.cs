@@ -1,7 +1,8 @@
 ﻿using Amazon.API.Models.DTOs.Cart;
 using Amazon.API.Repositories;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 namespace Amazon.API.Controllers
 {
     [ApiController]
@@ -15,10 +16,18 @@ namespace Amazon.API.Controllers
             this.cartRepository = cartRepository;
         }
 
+        [Authorize]
+
         [HttpPost("add")]//attribute added to specify the route for adding items to the cart
         public IActionResult AddToCart(AddToCartDto dto)
         {
-            cartRepository.AddToCart(dto);
+            string email =
+    User.FindFirst(
+        ClaimTypes.Email)?.Value!;
+
+            cartRepository.AddToCart(
+                dto,
+                email);
 
             return Ok("Product added to cart successfully");
         }
@@ -55,5 +64,52 @@ namespace Amazon.API.Controllers
 
             return Ok(total);
         }
+        [Authorize] //view caert with email
+        [HttpGet]
+        public IActionResult GetMyCart()
+        {
+            string email =
+                User.FindFirst(
+                    System.Security.Claims.ClaimTypes.Email
+                )?.Value!;
+
+            Guid? cartId =
+                cartRepository.GetCartIdByEmail(email);
+
+            if (cartId == null)
+            {
+                return Ok(new List<object>());
+            }
+
+            var items =
+                cartRepository.GetCartItems(cartId.Value);
+
+            return Ok(items);
+        }
+
+        //get cart toal foe ach user without cart id
+        [Authorize]
+        [HttpGet("total")]
+        public IActionResult GetMyCartTotal()
+        {
+            string email =
+                User.FindFirst(
+                    System.Security.Claims.ClaimTypes.Email
+                )?.Value!;
+
+            Guid? cartId =
+                cartRepository.GetCartIdByEmail(email);
+
+            if (cartId == null)
+            {
+                return Ok(0);
+            }
+
+            decimal total =
+                cartRepository.GetCartTotal(cartId.Value);
+
+            return Ok(total);
+        }
+
     }
 }

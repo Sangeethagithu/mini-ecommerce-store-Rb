@@ -13,9 +13,57 @@ namespace Amazon.API.Repositories
         {
             this.configuration = configuration;
         }
-        //create order
-        public void Checkout(CheckoutDto dto)
+
+
+        //new style
+        public Guid? GetCartIdByEmail(string email)
         {
+            string connectionString =
+                configuration.GetConnectionString(
+                    "DefaultConnection")!;
+
+            SqlConnection connection =
+                new SqlConnection(connectionString);
+
+            SqlCommand command =
+                new SqlCommand(
+                    "SELECT Id FROM Carts WHERE UserEmail = @Email",
+                    connection);
+
+            command.Parameters.AddWithValue(
+                "@Email",
+                email);
+
+            connection.Open();
+
+            object result =
+                command.ExecuteScalar();
+
+            connection.Close();
+
+            if (result == null)
+            {
+                return null;
+            }
+
+            return Guid.Parse(result.ToString()!);
+        }
+        //create order
+        public void Checkout(string email)
+        {
+
+            Guid? cartId =
+    GetCartIdByEmail(email);
+
+            if (cartId == null)
+            {
+                throw new Exception(
+                    "Cart not found");
+            }
+
+
+
+
             decimal total = 0;
 
             string connectionString =
@@ -32,7 +80,7 @@ namespace Amazon.API.Repositories
 
             totalCommand.Parameters.AddWithValue(
                 "@CartId",
-                dto.CartId);
+                cartId.Value);
 
             connection.Open();
 
@@ -57,7 +105,7 @@ namespace Amazon.API.Repositories
 
             command.Parameters.AddWithValue(
                 "@CartId",
-                dto.CartId);
+                cartId.Value);
 
             command.Parameters.AddWithValue(
                 "@TotalAmount",
@@ -68,7 +116,7 @@ namespace Amazon.API.Repositories
             connection.Close();
         }
         //get prev orders of user
-        public List<Order> GetAllOrders()
+        public List<Order> GetAllOrders(string email)
         {
             List<Order> orders =
                 new List<Order>();
@@ -87,6 +135,10 @@ namespace Amazon.API.Repositories
 
             command.CommandType =
                 CommandType.StoredProcedure;
+            command.Parameters.AddWithValue(
+    "@Email",
+    email);
+            
 
             connection.Open();
 

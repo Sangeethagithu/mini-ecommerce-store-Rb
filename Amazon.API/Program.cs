@@ -7,13 +7,25 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 
-
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AngularPolicy",
+        policy =>
+        {
+            policy
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 //swagger for api documentation
@@ -87,9 +99,23 @@ builder.Services.AddAuthentication(
         };
 });
 
+
+
 builder.Services.AddScoped<PasswordService>();//for hashing bcrypt
 
 var app = builder.Build();
+app.UseStaticFiles(
+    new StaticFileOptions
+    {
+        FileProvider =
+            new PhysicalFileProvider(
+                Path.Combine(
+                    Directory.GetCurrentDirectory(),
+                    "Images")),
+
+        RequestPath = "/images"
+    });
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -99,6 +125,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("AngularPolicy");
 
 app.UseAuthentication();
 

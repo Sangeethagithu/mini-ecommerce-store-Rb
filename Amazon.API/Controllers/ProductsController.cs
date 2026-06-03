@@ -33,12 +33,13 @@ namespace Amazon.API.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
-
-        public IActionResult AddProduct(CreateProductDto dto)
+        [Consumes("multipart/form-data")]
+        public IActionResult AddProduct(
+     [FromForm] CreateProductDto dto)
         {
             productRepository.AddProduct(dto);
 
-            return Ok("Product added successfully");//senting response back to client
+            return Ok("Product added successfully");
         }
 
         //updating PUT id comes from url
