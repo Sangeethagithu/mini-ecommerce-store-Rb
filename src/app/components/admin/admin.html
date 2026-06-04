@@ -1,0 +1,137 @@
+<h2>Product Management</h2>
+
+<hr>
+
+<h3>{{ selectedProductId ? 'Edit Product' : 'Add Product' }}</h3>
+
+<label>Name</label>
+<br>
+
+<input
+  type="text"
+  [(ngModel)]="name">
+
+<br><br>
+
+<label>Description</label>
+<br>
+
+<input
+  type="text"
+  [(ngModel)]="description">
+
+<br><br>
+
+<label>Price</label>
+<br>
+
+<input
+  type="number"
+  [(ngModel)]="price">
+
+<br><br>
+
+<label>Stock Quantity</label>
+<br>
+
+<input
+  type="number"
+  [(ngModel)]="stockQuantity">
+
+<br><br>
+
+<label>Category</label>
+<br>
+
+<select
+  [(ngModel)]="categoryId">
+
+  <option value="">
+    Select Category
+  </option>
+
+  <option
+    *ngFor="let category of categories"
+    [value]="category.id">
+
+    {{ category.name }}
+
+  </option>
+
+</select>
+
+<br><br>
+
+<label>Product Image</label>
+<br>
+
+<input
+  type="file"
+  (change)="onFileSelected($event)">
+
+<br><br>
+
+<button
+  *ngIf="!selectedProductId"
+  (click)="addProduct()">
+  Add Product
+</button>
+
+<button
+  *ngIf="selectedProductId"
+  (click)="updateProduct()">
+  Update Product
+</button>
+
+<hr>
+
+<h2>Search Products</h2>
+
+<input
+  type="text"
+  placeholder="Search Product"
+  [(ngModel)]="searchText"
+  (keyup)="searchProducts()">
+
+<button
+  (click)="searchProducts()">
+  Search
+</button>
+
+<button
+  (click)="loadProducts()">
+  Clear
+</button>
+
+<hr>
+
+<h2>Manage Products</h2>
+
+<div *ngFor="let product of products">
+
+  <img
+    [src]="'https://localhost:7113/images/' + product.imageUrl"
+    width="100">
+
+  <h3>{{ product.name }}</h3>
+  <p>Selected Product Id: {{ selectedProductId }}</p>
+
+  <p>{{ product.description }}</p>
+
+  <p>₹{{ product.price }}</p>
+
+  <p>Stock: {{ product.stockQuantity }}</p>
+
+  <button
+    (click)="editProduct(product)">
+    Edit
+  </button>
+
+  <button
+    (click)="deleteProduct(product.id)">
+    Delete
+  </button>
+
+  <hr>
+
+</div>

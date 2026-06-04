@@ -3,6 +3,10 @@ import { LoginComponent } from './components/login/login';
 import { ProductsComponent } from './components/products/products';
 import { CartComponent } from './components/cart/cart';
 import { OrdersComponent } from './components/orders/orders';
+import { AdminComponent } from './components/admin/admin';
+import { AdminOrdersComponent }
+from './components/admin-orders/admin-orders';
+
 
 export const routes: Routes = [
   {
@@ -19,5 +23,11 @@ export const routes: Routes = [
 },{
    path: 'orders',
   component: OrdersComponent
+},{
+  path: 'admin',
+  component: AdminComponent
+},{
+  path: 'admin-orders',
+  component: AdminOrdersComponent
 }
 ];

@@ -1,0 +1,57 @@
+<h2>Order Management</h2>
+
+<hr>
+<p>Total Orders: {{ orders.length }}</p>
+
+<pre>{{ orders | json }}</pre>
+<div *ngFor="let order of orders">
+
+  <h3>Order Id</h3>
+
+  <p>{{ order.id }}</p>
+
+  <p>
+    Total Amount:
+    ₹{{ order.totalAmount }}
+  </p>
+
+  <p>
+    Date:
+    {{ order.orderDate }}
+  </p>
+
+  <label>Status</label>
+
+  <select
+    [(ngModel)]="order.status">
+
+    <option value="Pending">
+      Pending
+    </option>
+
+    <option value="Processing">
+      Processing
+    </option>
+
+    <option value="Shipped">
+      Shipped
+    </option>
+
+    <option value="Delivered">
+      Delivered
+    </option>
+
+    <option value="Cancelled">
+      Cancelled
+    </option>
+
+  </select>
+
+  <button
+    (click)="updateStatus(order)">
+    Update Status
+  </button>
+
+  <hr>
+
+</div>

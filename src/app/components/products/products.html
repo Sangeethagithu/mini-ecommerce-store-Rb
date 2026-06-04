@@ -6,6 +6,9 @@
 <br>
 <br>
 <div *ngFor="let product of products">
+  <img
+  [src]="'https://localhost:7113/images/' + product.imageUrl"
+  width="200">
   <h3>{{ product.name }}</h3>
   <p>{{ product.description }}</p>
   <p>Price: ₹{{ product.price }}</p>

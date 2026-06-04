@@ -10,7 +10,25 @@ export class CartService {
     private http: HttpClient
   ) {
   }
+updateOrderStatus(data: any)
+{
+  const token =
+    localStorage.getItem('token');
 
+  const headers =
+    new HttpHeaders({
+      Authorization:
+        `Bearer ${token}`
+    });
+
+  return this.http.put(
+    'https://localhost:7113/api/Orders/status',
+    data,
+    {
+      headers,
+      responseType: 'text'
+    });
+}
   addToCart(data: any)
   {
     const token =
@@ -113,4 +131,23 @@ getOrderDetails(orderId: string)
     { headers }
   );
 }
+getAllOrdersForAdmin()
+{
+  const token =
+    localStorage.getItem('token');
+
+  console.log('ADMIN TOKEN:', token);
+
+  const headers =
+    new HttpHeaders({
+      Authorization:
+        `Bearer ${token}`
+    });
+
+  return this.http.get(
+    'https://localhost:7113/api/Orders/admin',
+    { headers }
+  );
+}
+
 }

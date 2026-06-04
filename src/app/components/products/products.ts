@@ -84,4 +84,5 @@ get productCount() {
   console.log('Getter called, length =', this.products.length);
   return this.products.length;
 }
+
 }
