@@ -171,6 +171,59 @@ namespace Amazon.API.Repositories
 
             return orders;
         }
+
+        //admin getorder
+        public List<Order> GetAllOrdersForAdmin()
+        {
+            List<Order> orders =
+                new List<Order>();
+
+            string connectionString =
+                configuration.GetConnectionString(
+                    "DefaultConnection")!;
+
+            SqlConnection connection =
+                new SqlConnection(connectionString);
+
+            SqlCommand command =
+                new SqlCommand(
+                    "GetAllOrdersForAdmin",
+                    connection);
+
+            command.CommandType =
+                CommandType.StoredProcedure;
+
+            connection.Open();
+
+            SqlDataReader reader =
+                command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Order order = new Order
+                {
+                    Id = Guid.Parse(
+                        reader["Id"].ToString()!),
+
+                    CartId = Guid.Parse(
+                        reader["CartId"].ToString()!),
+
+                    TotalAmount = Convert.ToDecimal(
+                        reader["TotalAmount"]),
+
+                    OrderDate = Convert.ToDateTime(
+                        reader["OrderDate"]),
+
+                    Status = reader["Status"].ToString()!
+                };
+
+                orders.Add(order);
+            }
+
+            connection.Close();
+
+            return orders;
+        }
         //show products in order
         public List<OrderItemDto> GetOrderDetails(
     Guid orderId)

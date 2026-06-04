@@ -42,7 +42,16 @@ namespace Amazon.API.Controllers
 
             return Ok("Order status updated successfully");
         }
+        //admin get order
+        
+        [HttpGet("admin")]
+        public IActionResult GetAllOrdersForAdmin()
+        {
+            var orders =
+                orderRepository.GetAllOrdersForAdmin();
 
+            return Ok(orders);
+        }
         //to get prev orders of user
         [HttpGet]
         public IActionResult GetAllOrders()

@@ -43,10 +43,11 @@ namespace Amazon.API.Controllers
         }
 
         //updating PUT id comes from url
-        [Authorize(Roles = "Admin")]
+        
         [HttpPut("{id}")]
         public IActionResult UpdateProduct(Guid id, UpdateProductDto dto)
         {
+            Console.WriteLine("UPDATE CONTROLLER HIT");
             productRepository.UpdateProduct(id, dto);
 
             return Ok("Product updated successfully");
