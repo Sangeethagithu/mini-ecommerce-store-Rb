@@ -122,7 +122,69 @@ namespace Amazon.API.Repositories
 
             connection.Close();
         }
+        //prod
+        public Product GetProductById(Guid id)
+        {
+            Product product = null;
 
+            string connectionString =
+                configuration.GetConnectionString(
+                    "DefaultConnection")!;
+
+            SqlConnection connection =
+                new SqlConnection(connectionString);
+
+            SqlCommand command =
+                new SqlCommand(
+                    "GetProductById",
+                    connection);
+
+            command.CommandType =
+                CommandType.StoredProcedure;
+
+            command.Parameters.AddWithValue(
+                "@Id",
+                id);
+
+            connection.Open();
+
+            SqlDataReader reader =
+                command.ExecuteReader();
+
+            if (reader.Read())
+            {
+                product = new Product
+                {
+                    Id = Guid.Parse(
+                        reader["Id"].ToString()!),
+
+                    Name =
+                        reader["Name"].ToString()!,
+
+                    Description =
+                        reader["Description"].ToString()!,
+
+                    Price =
+                        Convert.ToDecimal(
+                            reader["Price"]),
+
+                    StockQuantity =
+                        Convert.ToInt32(
+                            reader["StockQuantity"]),
+
+                    ImageUrl =
+                        reader["ImageUrl"].ToString()!,
+
+                    CategoryId =
+                        Guid.Parse(
+                            reader["CategoryId"].ToString()!)
+                };
+            }
+
+            connection.Close();
+
+            return product;
+        }
         // PUT operation
         public void UpdateProduct(Guid id, UpdateProductDto dto)
         {

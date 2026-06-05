@@ -33,6 +33,28 @@ namespace Amazon.API.Controllers
             return Ok(
                 "Order placed successfully");
         }
+        //recent produ
+        [AllowAnonymous]
+
+        [HttpGet("recent-orders")]
+        public IActionResult GetRecentOrders()
+        {
+            var orders =
+                orderRepository.GetRecentOrders();
+
+            return Ok(orders);
+        }
+        //admin dashboard
+        [AllowAnonymous]
+
+        [HttpGet("dashboard")]
+        public IActionResult GetDashboardStats()
+        {
+            var dashboard =
+                orderRepository.GetDashboardStats();
+
+            return Ok(dashboard);
+        }
         //order status 
         [HttpPut("status")]
         public IActionResult UpdateOrderStatus(

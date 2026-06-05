@@ -52,7 +52,14 @@ namespace Amazon.API.Controllers
 
             return Ok("Product updated successfully");
         }
+        [HttpGet("{id}")]
+        public IActionResult GetProductById(Guid id)
+        {
+            var product =
+                productRepository.GetProductById(id);
 
+            return Ok(product);
+        }
 
         //delete with id
         [Authorize(Roles = "Admin")]

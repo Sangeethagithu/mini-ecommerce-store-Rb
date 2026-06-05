@@ -2,7 +2,7 @@
 using Amazon.API.Models.DTOs.Order;
 using Microsoft.Data.SqlClient;
 using System.Data;
-
+using Amazon.API.Models.DTOs.Dashboard;
 namespace Amazon.API.Repositories
 {
     public class OrderRepository
@@ -47,6 +47,101 @@ namespace Amazon.API.Repositories
             }
 
             return Guid.Parse(result.ToString()!);
+        }
+        //admindashboard
+        public DashboardDto GetDashboardStats()
+        {
+            DashboardDto dashboard =
+                new DashboardDto();
+
+            string connectionString =
+                configuration.GetConnectionString(
+                    "DefaultConnection")!;
+
+            SqlConnection connection =
+                new SqlConnection(connectionString);
+
+            SqlCommand command =
+                new SqlCommand(
+                    "GetDashboardStats",
+                    connection);
+
+            command.CommandType =
+                CommandType.StoredProcedure;
+
+            connection.Open();
+
+            SqlDataReader reader =
+                command.ExecuteReader();
+
+            if (reader.Read())
+            {
+                dashboard.TotalProducts =
+                    Convert.ToInt32(
+                        reader["TotalProducts"]);
+
+                dashboard.TotalOrders =
+                    Convert.ToInt32(
+                        reader["TotalOrders"]);
+
+                dashboard.TotalRevenue =
+                    Convert.ToDecimal(
+                        reader["TotalRevenue"]);
+            }
+
+            connection.Close();
+
+            return dashboard;
+        }
+
+        //recent prod
+        public List<Order> GetRecentOrders()
+        {
+            List<Order> orders =
+                new List<Order>();
+
+            string connectionString =
+                configuration.GetConnectionString(
+                    "DefaultConnection")!;
+
+            SqlConnection connection =
+                new SqlConnection(connectionString);
+
+            SqlCommand command =
+                new SqlCommand(
+                    "GetRecentOrders",
+                    connection);
+
+            command.CommandType =
+                CommandType.StoredProcedure;
+
+            connection.Open();
+
+            SqlDataReader reader =
+                command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Order order = new Order
+                {
+                    Id = Guid.Parse(
+                        reader["Id"].ToString()!),
+
+                    TotalAmount = Convert.ToDecimal(
+                        reader["TotalAmount"]),
+
+                    OrderDate = Convert.ToDateTime(
+                        reader["OrderDate"]),
+
+                    Status = reader["Status"].ToString()!
+                };
+
+                orders.Add(order);
+            }
+
+            connection.Close();
+
+            return orders;
         }
         //create order
         public void Checkout(string email)

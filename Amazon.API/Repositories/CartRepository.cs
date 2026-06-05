@@ -170,23 +170,30 @@ namespace Amazon.API.Repositories
             while (reader.Read())
             {
                 CartItemResponseDto item =
-                    new CartItemResponseDto
-                    {
-                        ProductId =
-                            Guid.Parse(reader["ProductId"].ToString()!),
+     new CartItemResponseDto
+     {
+         CartItemId =
+             Guid.Parse(
+                 reader["Id"].ToString()!),
 
-                        ProductName =
-                            reader["ProductName"].ToString()!,
+         ProductId =
+             Guid.Parse(
+                 reader["ProductId"].ToString()!),
 
-                        Price =
-                            Convert.ToDecimal(reader["Price"]),
+         ProductName =
+             reader["ProductName"].ToString()!,
 
-                        Quantity =
-                            Convert.ToInt32(reader["Quantity"]),
+         Price =
+             Convert.ToDecimal(
+                 reader["Price"]),
 
-                        ImageUrl =
-                            reader["ImageUrl"].ToString()!
-                    };
+         Quantity =
+             Convert.ToInt32(
+                 reader["Quantity"]),
+
+         ImageUrl =
+             reader["ImageUrl"].ToString()!
+     };
 
                 items.Add(item);
             }

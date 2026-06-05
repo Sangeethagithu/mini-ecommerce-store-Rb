@@ -66,6 +66,81 @@ namespace Amazon.API.Repositories
 
             connection.Close();
         }
+
+        //existing user email
+        public bool EmailExists(string email)
+        {
+            string connectionString =
+                configuration.GetConnectionString(
+                    "DefaultConnection")!;
+
+            SqlConnection connection =
+                new SqlConnection(connectionString);
+
+            SqlCommand command =
+                new SqlCommand(
+                    "SELECT COUNT(*) FROM Users WHERE Email = @Email",
+                    connection);
+
+            command.Parameters.AddWithValue(
+                "@Email",
+                email);
+
+            connection.Open();
+
+            int count =
+                (int)command.ExecuteScalar();
+
+            connection.Close();
+
+            return count > 0;
+        }
+
+
+        //forget password
+        public void ForgotPassword(
+    ForgotPasswordDto dto)
+        {
+            string connectionString =
+                configuration.GetConnectionString(
+                    "DefaultConnection")!;
+
+            SqlConnection connection =
+                new SqlConnection(connectionString);
+
+            SqlCommand command =
+                new SqlCommand(
+                    "ForgotPassword",
+                    connection);
+
+            command.CommandType =
+                CommandType.StoredProcedure;
+
+            string hashedPassword =
+                passwordService.HashPassword(
+                    dto.NewPassword);
+
+            command.Parameters.AddWithValue(
+                "@Email",
+                dto.Email);
+
+            command.Parameters.AddWithValue(
+                "@Password",
+                hashedPassword);
+
+            connection.Open();
+
+            int rows =
+                command.ExecuteNonQuery();
+
+            connection.Close();
+
+            if (rows == 0)
+            {
+                throw new Exception(
+                    "Email not found");
+            }
+        }
         //login
         public User? Login(LoginDto dto)
         {
