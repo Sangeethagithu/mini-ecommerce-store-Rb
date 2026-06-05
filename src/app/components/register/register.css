@@ -20,32 +20,15 @@ input
     padding: 10px;
 
     margin-top: 5px;
+
+    box-sizing: border-box;
 }
 
-button
-{
-    width: 100%;
-
-    padding: 10px;
-
-    margin-top: 10px;
-
-    background: #ffd814;
-
-    border: none;
-
-    cursor: pointer;
-}
-
-button:hover
-{
-    background: #f7ca00;
-}
 .password-container
 {
     display: flex;
 
-    align-items: center;
+    gap: 5px;
 }
 
 .password-container input
@@ -53,9 +36,21 @@ button:hover
     flex: 1;
 }
 
-.eye-btn
+.password-container button
 {
     width: 50px;
+}
 
-    margin-left: 5px;
+.back-btn
+{
+    width: auto;
+
+    margin-bottom: 15px;
+}
+
+button
+{
+    padding: 10px;
+
+    cursor: pointer;
 }

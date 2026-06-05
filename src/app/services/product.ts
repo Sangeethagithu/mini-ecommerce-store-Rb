@@ -96,4 +96,18 @@ updateProduct(
       responseType: 'text'
     });
 }
+//low stock
+getLowStockProducts()
+{
+  return this.http.get(
+    'https://localhost:7113/api/Products/low-stock'
+  );
+}
+
+getProductById(id: string)
+{
+  return this.http.get(
+    `https://localhost:7113/api/Products/${id}`
+  );
+}
 }

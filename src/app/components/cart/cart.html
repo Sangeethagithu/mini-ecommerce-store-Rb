@@ -1,31 +1,104 @@
-<h2>My Cart</h2>
+<h1>Shopping Cart</h1>
 
-<p>Total Items: {{ items.length }}</p>
+<div *ngIf="items.length === 0">
 
-<div *ngFor="let item of items">
+  <h2>
+    Your Cart is Empty
+  </h2>
 
-  <h3>{{ item.productName }}</h3>
-
-  <p>Price: ₹{{ item.price }}</p>
-
-  <p>Quantity: {{ item.quantity }}</p>
-
-  <hr>
+  <a href="/products">
+    Continue Shopping
+  </a>
 
 </div>
 
-<hr>
+<div *ngIf="items.length > 0">
 
-<h3>
-  Total: ₹{{ total }}
-</h3>
+  <div
+    class="cart-item"
+    *ngFor="let item of items">
 
-<button (click)="checkout()">
-  Checkout
+    <div class="item-details">
+
+      <h3>
+        {{ item.productName }}
+      </h3>
+
+      <p>
+        Price: ₹{{ item.price }}
+      </p>
+
+     <div class="quantity-controls">
+
+  <button
+    (click)="decreaseQuantity(item)">
+
+    -
+
+  </button>
+  <button
+  class="remove-btn"
+  (click)="removeItem(item)">
+
+    🗑️
+
 </button>
-<br>
-<br>
 
-<a href="/orders">
-  View Orders
-</a>
+  <span>
+
+    {{ item.quantity }}
+
+  </span>
+
+  <button
+    (click)="increaseQuantity(item)">
+
+    +
+
+  </button>
+
+</div>
+      <p class="subtotal">
+
+        Item Total:
+        ₹{{ item.price * item.quantity }}
+
+      </p>
+
+    </div>
+
+  </div>
+
+  <div class="summary">
+
+    <h2>
+      Order Summary
+    </h2>
+
+    <p>
+      Total Items:
+      {{ items.length }}
+    </p>
+
+    <h3>
+      Total:
+      ₹{{ total }}
+    </h3>
+
+    <button
+      class="checkout-btn"
+      (click)="checkout()">
+
+      Proceed to Checkout
+
+    </button>
+
+    <br><br>
+
+    <a href="/orders">
+      View Orders
+    </a>
+
+  </div>
+
+</div>

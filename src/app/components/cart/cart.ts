@@ -75,4 +75,70 @@ export class CartComponent implements OnInit {
           alert('Checkout failed');
         });
   }
+  increaseQuantity(item: any)
+{
+  const data =
+  {
+    cartItemId:
+      item.cartItemId,
+
+    quantity:
+      item.quantity + 1
+  };
+
+  this.cartService
+    .updateCartQuantity(data)
+    .subscribe(
+      () =>
+      {
+        this.ngOnInit();
+      },
+      (error) =>
+      {
+        console.log(error);
+      });
+}
+decreaseQuantity(item: any)
+{
+  if (item.quantity <= 1)
+  {
+    return;
+  }
+
+  const data =
+  {
+    cartItemId:
+      item.cartItemId,
+
+    quantity:
+      item.quantity - 1
+  };
+
+  this.cartService
+    .updateCartQuantity(data)
+    .subscribe(
+      () =>
+      {
+        this.ngOnInit();
+      },
+      (error) =>
+      {
+        console.log(error);
+      });
+}
+removeItem(item: any)
+{
+  this.cartService
+    .removeCartItem(
+      item.cartItemId)
+    .subscribe(
+      () =>
+      {
+        this.ngOnInit();
+      },
+      (error) =>
+      {
+        console.log(error);
+      });
+}
 }

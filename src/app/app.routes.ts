@@ -6,11 +6,24 @@ import { OrdersComponent } from './components/orders/orders';
 import { AdminComponent } from './components/admin/admin';
 import { AdminOrdersComponent }
 from './components/admin-orders/admin-orders';
-
-
+import { DashboardComponent }
+from './components/dashboard/dashboard';
+import { ProductDetailsComponent }
+from './components/product-details/product-details';
+import { RegisterComponent }
+from './components/register/register';
+import { ForgotPasswordComponent }
+from './components/forgot-password/forgot-password';
 export const routes: Routes = [
-  {
+
+    {
     path: '',
+    redirectTo: 'login',
+    pathMatch: 'full'
+  },
+
+  {
+    path: 'login',
     component: LoginComponent
   },
   {
@@ -29,5 +42,20 @@ export const routes: Routes = [
 },{
   path: 'admin-orders',
   component: AdminOrdersComponent
+},{
+  path: 'dashboard',
+  component: DashboardComponent
+},{
+  path: 'product-details/:id',
+  component: ProductDetailsComponent
+},{
+  path: 'register',
+  component: RegisterComponent
+},{
+  path: 'forgot-password',
+  component: ForgotPasswordComponent
+},{
+  path: '**',
+  redirectTo: 'login'
 }
 ];

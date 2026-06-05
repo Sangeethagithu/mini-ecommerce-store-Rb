@@ -1,27 +1,68 @@
-<h2>Login</h2>
+<form (ngSubmit)="login()">
 
-<div>
+<div class="auth-container">
+
+  <h1 class="logo">
+    AmazonMini
+  </h1>
+
+  <h2>Sign In</h2>
+
   <label>Email</label>
-  <br>
 
   <input
     type="email"
-    [(ngModel)]="email">
-</div>
+    [(ngModel)]="email"
+    name="email">
 
-<br>
+  <br><br>
 
-<div>
   <label>Password</label>
-  <br>
+<label>Password</label>
+
+<div class="password-container">
 
   <input
-    type="password"
-    [(ngModel)]="password">
+    [type]="showPassword ? 'text' : 'password'"
+    [(ngModel)]="password"
+    name="password">
+
+  <button
+    class="eye-btn"
+    type="button"
+    (click)="togglePassword()">
+
+    👁
+
+  </button>
+
+</div>
+<br>
+<p>
+ <a routerLink="/forgot-password">
+  Forgot Password?
+</a>
+</p>
+  <br>
+
+  <button type="submit">
+    Login
+  </button>
+
+  <hr>
+
+  <p>
+    New to AmazonMini?
+  </p>
+
+  <button
+    type="button"
+    routerLink="/register">
+
+    Create Account →
+
+  </button>
+
 </div>
 
-<br>
-
-<button (click)="login()">
-  Login
-</button>
+</form>

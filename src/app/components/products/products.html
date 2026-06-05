@@ -1,20 +1,115 @@
-<h2>Products</h2>
-<button routerLink="/cart">
-  View Cart
-</button>
+<div class="navbar">
 
-<br>
-<br>
-<div *ngFor="let product of products">
-  <img
-  [src]="'https://localhost:7113/images/' + product.imageUrl"
-  width="200">
-  <h3>{{ product.name }}</h3>
-  <p>{{ product.description }}</p>
-  <p>Price: ₹{{ product.price }}</p>
-  <p>Stock: {{ product.stockQuantity }}</p>
-    <button (click)="addToCart(product.id)">
-    Add To Cart
-  </button>
-  <hr>
+  <div class="logo">
+    AmazonMini
+  </div>
+
+  <div class="search-container">
+
+    <input
+      type="text"
+      placeholder="Search AmazonMini"
+      [(ngModel)]="searchText"
+      (input)="searchProducts()">
+
+    <button
+      class="search-btn">
+
+      🔍
+
+    </button>
+
+    <button
+      *ngIf="searchText"
+      class="clear-btn"
+      (click)="searchText=''; loadProducts()">
+
+      ✖
+
+    </button>
+
+    <div
+      *ngIf="suggestions.length > 0"
+      class="suggestions">
+
+      <div
+        *ngFor="let item of suggestions"
+        class="suggestion-item"
+        (click)="selectProduct(item)">
+
+        {{ item.name }}
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="nav-links">
+
+    <a (click)="logout()">
+      Logout
+    </a>
+
+    <a routerLink="/cart">
+      🛒 Cart
+    </a>
+
+    <a routerLink="/orders">
+      Orders
+    </a>
+
+  </div>
+
+</div>
+
+<h1>Products</h1>
+
+<div class="product-grid">
+
+  <div
+    class="product-card"
+    *ngFor="let product of products">
+
+    <img
+      [src]="'https://localhost:7113/images/' + product.imageUrl"
+      class="product-image">
+
+    <h3>
+
+      <a
+        [routerLink]="[
+          '/product-details',
+          product.id
+        ]">
+
+        {{ product.name }}
+
+      </a>
+
+    </h3>
+
+    <p class="description">
+      {{ product.description }}
+    </p>
+
+    <p class="price">
+      ₹{{ product.price }}
+    </p>
+
+    <p>
+      Stock:
+      {{ product.stockQuantity }}
+    </p>
+
+    <button
+      class="cart-btn"
+      (click)="addToCart(product.id)">
+
+      Add To Cart
+
+    </button>
+
+  </div>
+
 </div>

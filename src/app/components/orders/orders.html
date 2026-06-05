@@ -1,35 +1,112 @@
-<h2>My Orders</h2>
+<h1>My Orders</h1>
 
-<div *ngFor="let order of orders">
+<div
+  class="order-card"
+  *ngFor="let order of orders">
 
-  <h3>Order Id</h3>
+  <div class="order-header">
 
-  <p>{{ order.id }}</p>
+    <div>
 
-  <p>Total Amount: ₹{{ order.totalAmount }}</p>
+      <p class="label">
+        ORDER
+      </p>
 
-  <p>Status: {{ order.status }}</p>
+      <p>
+        #{{ order.id.slice(-4) }}
+      </p>
 
-  <p>Date: {{ order.orderDate }}</p>
+    </div>
 
-  <button (click)="viewDetails(order.id)">
+    <div>
+
+      <p class="label">
+        DATE
+      </p>
+
+      <p>
+        {{ order.orderDate | date:'dd MMM yyyy' }}
+      </p>
+
+    </div>
+
+    <div>
+
+      <p class="label">
+        TOTAL
+      </p>
+
+      <p>
+        ₹{{ order.totalAmount }}
+      </p>
+
+    </div>
+
+    <div>
+
+      <p class="label">
+        STATUS
+      </p>
+
+      <p
+        [ngClass]="{
+          'pending': order.status === 'Pending',
+          'processing': order.status === 'Processing',
+          'delivered': order.status === 'Delivered',
+          'cancelled': order.status === 'Cancelled'
+        }">
+
+        {{ order.status }}
+
+      </p>
+
+    </div>
+
+  </div>
+
+  <button
+    class="details-btn"
+    (click)="viewDetails(order.id)">
+
     View Details
-  </button>
 
-  <hr>
+  </button>
 
 </div>
 
-<h2>Order Details</h2>
+<hr>
 
-<div *ngFor="let item of selectedOrderItems">
+<div *ngIf="selectedOrderItems.length > 0">
 
-  <h3>{{ item.productName }}</h3>
+  <h2>
+    Order Details
+  </h2>
 
-  <p>Quantity: {{ item.quantity }}</p>
+  <div
+    class="detail-card"
+    *ngFor="let item of selectedOrderItems">
 
-  <p>Price: ₹{{ item.price }}</p>
+    <h3>
+      {{ item.productName }}
+    </h3>
 
-  <hr>
+    <p>
+      Price:
+      ₹{{ item.price }}
+    </p>
+
+    <p>
+      Quantity:
+      {{ item.quantity }}
+    </p>
+
+    <p class="subtotal">
+
+      Subtotal:
+      ₹{{ item.price * item.quantity }}
+
+    </p>
+
+  </div>
 
 </div>

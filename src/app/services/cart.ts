@@ -149,5 +149,77 @@ getAllOrdersForAdmin()
     { headers }
   );
 }
+//dashboard admin
+getDashboardStats()
+{
+  const token =
+    localStorage.getItem('token');
 
+  const headers =
+    new HttpHeaders({
+      Authorization:
+        `Bearer ${token}`
+    });
+
+  return this.http.get(
+    'https://localhost:7113/api/Orders/dashboard',
+    { headers }
+  );
+}
+//recent prod
+getRecentOrders()
+{
+  const token =
+    localStorage.getItem('token');
+
+  const headers =
+    new HttpHeaders({
+      Authorization:
+        `Bearer ${token}`
+    });
+
+  return this.http.get(
+    'https://localhost:7113/api/Orders/recent-orders',
+    { headers }
+  );
+}
+//update quantity
+updateCartQuantity(data: any)
+{
+  const token =
+    localStorage.getItem('token');
+
+  const headers =
+    new HttpHeaders({
+      Authorization:
+        `Bearer ${token}`
+    });
+
+  return this.http.put(
+    'https://localhost:7113/api/Cart/update',
+    data,
+    {
+      headers,
+      responseType: 'text'
+    });
+}
+
+removeCartItem(cartItemId: string)
+{
+  const token =
+    localStorage.getItem('token');
+
+  const headers =
+    new HttpHeaders({
+      Authorization:
+        `Bearer ${token}`
+    });
+
+  return this.http.delete(
+    `https://localhost:7113/api/Cart/${cartItemId}`,
+    {
+      headers,
+      responseType: 'text'
+    });
+}
 }

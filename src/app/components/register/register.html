@@ -1,0 +1,62 @@
+<div class="auth-container">
+
+ <a routerLink="/login">
+  ← Back to Login
+</a>
+  <h2>Create Account</h2>
+
+  <label>Name</label>
+  <br>
+
+  <input
+    type="text"
+    [(ngModel)]="name">
+
+  <br><br>
+
+  <label>Email</label>
+  <br>
+
+  <input
+    type="email"
+    [(ngModel)]="email">
+
+  <br><br>
+
+  <label>Password</label>
+  <br>
+
+  <div class="password-container">
+
+    <input
+      [type]="showPassword ? 'text' : 'password'"
+      [(ngModel)]="password">
+
+    <button
+      type="button"
+      (click)="togglePassword()">
+
+      👁
+
+    </button>
+
+  </div>
+
+  <br>
+
+  <p>Password must:</p>
+
+  <ul>
+    <li>Be at least 8 characters</li>
+    <li>Contain 1 uppercase letter</li>
+    <li>Contain 1 number</li>
+  </ul>
+
+  <button
+    (click)="register()">
+
+    Create Account
+
+  </button>
+
+</div>

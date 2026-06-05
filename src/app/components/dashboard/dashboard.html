@@ -1,0 +1,70 @@
+<h1>Admin Dashboard</h1>
+
+<div class="stats-container">
+
+  <div class="card">
+    <h3>Total Products</h3>
+    <h2>{{ dashboard.totalProducts }}</h2>
+  </div>
+
+  <div class="card">
+    <h3>Total Orders</h3>
+    <h2>{{ dashboard.totalOrders }}</h2>
+  </div>
+
+  <div class="card">
+    <h3>Total Revenue</h3>
+    <h2>₹{{ dashboard.totalRevenue }}</h2>
+  </div>
+
+</div>
+
+<hr>
+
+<h2>Low Stock Products</h2>
+
+<table>
+
+  <tr>
+    <th>Product</th>
+    <th>Stock</th>
+  </tr>
+
+  <tr *ngFor="let product of lowStockProducts">
+
+    <td>{{ product.name }}</td>
+
+    <td>{{ product.stockQuantity }}</td>
+
+  </tr>
+
+</table>
+<hr>
+
+<h2>Recent Orders</h2>
+
+<table>
+
+  <tr>
+    <th>Order Id</th>
+    <th>Amount</th>
+    <th>Status</th>
+  </tr>
+
+  <tr *ngFor="let order of recentOrders">
+
+    <td>
+      {{ order.id }}
+    </td>
+
+    <td>
+      ₹{{ order.totalAmount }}
+    </td>
+
+    <td>
+      {{ order.status }}
+    </td>
+
+  </tr>
+
+</table>

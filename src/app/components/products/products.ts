@@ -8,13 +8,13 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
-
+import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-products',
   standalone: true,
    imports: [
     CommonModule,
-    RouterModule
+    RouterModule, FormsModule
   ],
   templateUrl: './products.html',
   styleUrl: './products.css'
@@ -22,7 +22,8 @@ import { RouterModule } from '@angular/router';
 export class ProductsComponent implements OnInit {
 
   products: any[] = [];
-
+searchText = '';
+suggestions: any[] = [];
  constructor(
   private productService: ProductService,
   private cartService: CartService,
@@ -33,7 +34,7 @@ ngOnInit(): void {
 
   console.log('ngOnInit called');
   console.log('Instance in ngOnInit:', this);
-
+  this.loadProducts();
   this.productService.getProducts()
     .subscribe({
   next: (response: any) => {
@@ -49,15 +50,77 @@ ngOnInit(): void {
         console.log(error);
       }
     });
+
+
+    
 }
 
+loadProducts()
+{
+  this.productService
+    .getProducts()
+    .subscribe(
+      (response: any) =>
+      {
+        this.products = response;
+
+        this.cdr.detectChanges();
+      },
+      (error) =>
+      {
+        console.log(error);
+      });
+}
+searchProducts()
+{
+  if (!this.searchText.trim())
+  {
+    this.loadProducts();
+
+    this.suggestions = [];
+
+    return;
+  }
+
+  this.productService
+    .searchProducts(this.searchText)
+    .subscribe(
+      (response: any) =>
+      {
+        this.products = response;
+
+        this.suggestions = response;
+
+        this.cdr.detectChanges();
+      },
+      (error) =>
+      {
+        console.log(error);
+      });
+}
+selectProduct(product: any)
+{
+  this.searchText =
+    product.name;
+
+  this.suggestions = [];
+
+  this.products = [product];
+
+  this.cdr.detectChanges();
+}
 checkProducts() {
   console.log('Button Clicked');
   console.log('Current Length:', this.products.length);
   console.log('Current Products:', this.products);
 }
 
+logout()
+{
+  localStorage.removeItem('token');
 
+  location.href = '/login';
+}
   addToCart(productId: string)
 {
   const data =
