@@ -48,12 +48,7 @@ export class ProductService {
     `https://localhost:7113/api/Products/search?name=${name}`
   );
 }
-  getCategories()
-{
-  return this.http.get(
-    'https://localhost:7113/api/Categories'
-  );
-}
+
 deleteProduct(id: string)
 {
   const token =
@@ -71,6 +66,37 @@ deleteProduct(id: string)
       headers,
       responseType: 'text'
     }
+  );
+}
+getCategories()
+{
+  return this.http.get(
+    'https://localhost:7113/api/Categories'
+  );
+}
+addCategory(data: any)
+{
+  return this.http.post(
+    'https://localhost:7113/api/Categories',
+    data,
+    { responseType: 'text' }
+  );
+}
+
+updateCategory(id: string, data: any)
+{
+  return this.http.put(
+    `https://localhost:7113/api/Categories/${id}`,
+    data,
+    { responseType: 'text' }
+  );
+}
+
+deleteCategory(id: string)
+{
+  return this.http.delete(
+    `https://localhost:7113/api/Categories/${id}`,
+    { responseType: 'text' }
   );
 }
 updateProduct(

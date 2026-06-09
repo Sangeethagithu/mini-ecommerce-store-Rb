@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../services/cart';
 import { ChangeDetectorRef } from '@angular/core';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-cart',
   standalone: true,
@@ -10,12 +10,18 @@ import { ChangeDetectorRef } from '@angular/core';
   templateUrl: './cart.html',
   styleUrl: './cart.css'
 })
+
+
+
+
+
+
 export class CartComponent implements OnInit {
 
   items: any[] = [];
   total: number = 0;
 
-  constructor(
+  constructor(private router: Router,
     private cartService: CartService,
     private cdr: ChangeDetectorRef
   ) {
@@ -53,6 +59,12 @@ export class CartComponent implements OnInit {
           console.log(error);
         });
   }
+goToProducts() {
+  this.router.navigate(['/products']);
+}
+goToOrders() {
+  this.router.navigate(['/orders']);
+}
 
   checkout()
   {

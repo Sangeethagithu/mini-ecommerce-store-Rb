@@ -1,0 +1,87 @@
+<div class="category-container">
+
+  <h1>Category Management</h1>
+
+  <button
+    class="add-btn"
+    (click)="showAddForm = true">
+    + Add Category
+  </button>
+
+  <table>
+
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <tr *ngFor="let category of categories">
+
+        <td>
+          {{ category.name }}
+        </td>
+
+        <td>
+
+          <button
+            class="edit-btn"
+            (click)="editCategory(category)">
+            ✏️
+          </button>
+
+          <button
+            class="delete-btn"
+            (click)="deleteCategory(category.id)">
+            🗑️
+          </button>
+
+        </td>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+
+  <hr>
+
+<div *ngIf="showAddForm">
+
+  <h2>Add Category</h2>
+
+  <input
+    [(ngModel)]="newCategory.name"
+    placeholder="Category Name">
+
+  <br><br>
+
+  <button
+    (click)="saveCategory()">
+    Save
+  </button>
+
+</div>
+
+<hr>
+
+<div *ngIf="selectedCategory">
+
+  <h2>Edit Category</h2>
+
+  <input
+    [(ngModel)]="selectedCategory.name">
+
+  <br><br>
+
+  <button
+    (click)="updateCategory()">
+    Update
+  </button>
+
+</div>
+
+</div>

@@ -17,11 +17,15 @@
 .card h3 {
   margin: 0;
   font-size: 16px;
+  color: white;
+  font-weight: 600;
 }
 
 .card h1 {
   margin-top: 10px;
   font-size: 32px;
+  color: white;
+  font-weight: bold;
 }
 
 .total {
@@ -96,28 +100,27 @@ button {
   padding: 6px 12px;
   cursor: pointer;
 }
-
-.pending {
+.status-pending {
   color: orange;
   font-weight: bold;
 }
 
-.processing {
+.status-processing {
   color: blue;
   font-weight: bold;
 }
 
-.shipped {
+.status-shipped {
   color: purple;
   font-weight: bold;
 }
 
-.delivered {
+.status-delivered {
   color: green;
   font-weight: bold;
 }
 
-.cancelled {
+.status-cancelled {
   color: red;
   font-weight: bold;
 }

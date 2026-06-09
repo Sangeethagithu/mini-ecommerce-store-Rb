@@ -15,6 +15,10 @@ export class AdminProductsComponent
 implements OnInit
 {
   products: any[] = [];
+  categories: any[] = [];
+  selectedImage: File | null = null;
+  searchText = '';
+  suggestions: any[] = [];
 
   constructor(
     private productService: ProductService,  private cdr: ChangeDetectorRef
@@ -37,9 +41,22 @@ showAddForm = false;
 
   ngOnInit(): void
   {
-    this.loadProducts();
+    this.loadProducts(); this.loadCategories();
   }
-
+loadCategories()
+{
+  this.productService
+      .getCategories()
+      .subscribe(
+      (response:any) =>
+      {
+          this.categories = response;
+      },
+      error =>
+      {
+          console.log(error);
+      });
+}
   loadProducts()
   {
     this.productService
@@ -56,8 +73,45 @@ showAddForm = false;
         });
 
       }
-      
-  
+      onEditFileSelected(event: any)
+{
+  this.selectedImage =
+    event.target.files[0];
+}
+searchProducts()
+{
+  if (!this.searchText.trim())
+  {
+    this.loadProducts();
+
+    this.suggestions = [];
+
+    return;
+  }
+
+  this.productService
+      .searchProducts(this.searchText)
+      .subscribe(
+      (response: any) =>
+      {
+          this.products = response;
+
+          this.suggestions = response;
+      },
+      error =>
+      {
+          console.log(error);
+      });
+}
+
+selectProduct(product: any)
+{
+  this.searchText = product.name;
+
+  this.suggestions = [];
+
+  this.products = [product];
+}
 addProduct()
 {
   this.showAddForm = true;
@@ -71,6 +125,16 @@ onFileSelected(event: any)
 
 saveProduct()
 {
+
+  if (this.newProduct.stockQuantity < 1) {
+  alert('Stock quantity must be at least 1');
+  return;
+}
+  if (!this.newProduct.categoryId) {
+    alert('Please select a category');
+    return;
+  }
+
   const formData =
     new FormData();
 
@@ -129,17 +193,51 @@ editProduct(product: any)
 
 updateProduct()
 {
+  if (this.selectedProduct.stockQuantity < 1)
+  {
+    alert('Stock quantity must be at least 1');
+    return;
+  }
+
+  const formData =
+    new FormData();
+
+  formData.append(
+    'name',
+    this.selectedProduct.name);
+
+  formData.append(
+    'description',
+    this.selectedProduct.description);
+
+  formData.append(
+    'price',
+    this.selectedProduct.price.toString());
+
+  formData.append(
+    'stockQuantity',
+    this.selectedProduct.stockQuantity.toString());
+
+  formData.append(
+    'categoryId',
+    this.selectedProduct.categoryId);
+
+  if (this.selectedImage)
+  {
+    formData.append(
+      'image',
+      this.selectedImage);
+  }
+
   this.productService
     .updateProduct(
       this.selectedProduct.id,
-      this.selectedProduct
+      formData
     )
     .subscribe(
       () =>
       {
-        alert(
-          'Product Updated'
-        );
+        alert('Product Updated');
 
         this.selectedProduct = null;
 
@@ -148,8 +246,7 @@ updateProduct()
       error =>
       {
         console.log(error);
-      }
-    );
+      });
 }
   deleteProduct(id: string)
   {

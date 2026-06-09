@@ -1,103 +1,114 @@
-<h1>Shopping Cart</h1>
+<div class="cart-page">
 
-<div *ngIf="items.length === 0">
+  <h1 class="page-title">Shopping Cart</h1>
 
-  <h2>
-    Your Cart is Empty
-  </h2>
+  <div *ngIf="items.length === 0" class="empty-cart">
 
-  <a href="/products">
-    Continue Shopping
-  </a>
+    <div class="empty-card">
 
-</div>
+      <div class="cart-icon">🛒</div>
 
-<div *ngIf="items.length > 0">
+      <h2>Your Cart is Empty</h2>
 
-  <div
-    class="cart-item"
-    *ngFor="let item of items">
+      <p>Add some products and come back here.</p>
 
-    <div class="item-details">
-
-      <h3>
-        {{ item.productName }}
-      </h3>
-
-      <p>
-        Price: ₹{{ item.price }}
-      </p>
-
-     <div class="quantity-controls">
-
-  <button
-    (click)="decreaseQuantity(item)">
-
-    -
-
-  </button>
-  <button
-  class="remove-btn"
-  (click)="removeItem(item)">
-
-    🗑️
-
+<button
+  class="shop-btn"
+  (click)="goToProducts()">
+  Continue Shopping
 </button>
-
-  <span>
-
-    {{ item.quantity }}
-
-  </span>
-
-  <button
-    (click)="increaseQuantity(item)">
-
-    +
-
-  </button>
-
-</div>
-      <p class="subtotal">
-
-        Item Total:
-        ₹{{ item.price * item.quantity }}
-
-      </p>
 
     </div>
 
   </div>
 
-  <div class="summary">
+  <div
+    *ngIf="items.length > 0"
+    class="cart-layout">
 
-    <h2>
-      Order Summary
-    </h2>
+    <div class="cart-items">
 
-    <p>
-      Total Items:
-      {{ items.length }}
-    </p>
+      <div
+        class="cart-item"
+        *ngFor="let item of items">
 
-    <h3>
-      Total:
-      ₹{{ total }}
-    </h3>
+        <div class="item-details">
 
-    <button
-      class="checkout-btn"
-      (click)="checkout()">
+          <h3>{{ item.productName }}</h3>
 
-      Proceed to Checkout
+          <p class="price">
+            ₹{{ item.price }}
+          </p>
 
-    </button>
+          <div class="quantity-controls">
 
-    <br><br>
+            <button (click)="decreaseQuantity(item)">
+              -
+            </button>
 
-    <a href="/orders">
-      View Orders
-    </a>
+            <span>{{ item.quantity }}</span>
+
+            <button (click)="increaseQuantity(item)">
+              +
+            </button>
+
+            <button
+              class="remove-btn"
+              (click)="removeItem(item)">
+
+              🗑️
+
+            </button>
+
+          </div>
+
+          <p class="subtotal">
+            Item Total: ₹{{ item.price * item.quantity }}
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="summary">
+
+      <h2>Order Summary</h2>
+
+      <div class="summary-row">
+        <span>Total Items</span>
+        <span>{{ items.length }}</span>
+      </div>
+
+      <div class="summary-row">
+        <span>Subtotal</span>
+        <span>₹{{ total }}</span>
+      </div>
+
+      <hr>
+
+      <div class="summary-total">
+        <span>Total</span>
+        <span>₹{{ total }}</span>
+      </div>
+
+      <div class="action-buttons">
+
+  <button
+    class="checkout-btn"
+    (click)="checkout()">
+    Proceed to Checkout
+  </button>
+
+  <button
+    class="orders-btn"
+    (click)="goToOrders()">
+    View Orders
+  </button>
+
+</div>
+    </div>
 
   </div>
 
