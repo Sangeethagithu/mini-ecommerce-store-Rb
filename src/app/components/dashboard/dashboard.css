@@ -1,3 +1,4 @@
+
 .stats-container
 {
     display: flex;
@@ -38,4 +39,10 @@ td
 th
 {
     background-color: #f5f5f5;
+}
+.dashboard-container
+{
+    margin-left: 250px;
+
+    padding: 20px;
 }

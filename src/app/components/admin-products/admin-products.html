@@ -1,0 +1,182 @@
+<h1>Product Management</h1>
+
+<button
+  class="add-btn"
+  (click)="addProduct()">
+  + Add Product
+</button>
+
+<table>
+
+  <thead>
+    <tr>
+      <th>Product</th>
+      <th>Price</th>
+      <th>Stock</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+    <tr *ngFor="let product of products">
+
+      <td>{{ product.name }}</td>
+
+      <td>₹{{ product.price }}</td>
+
+      <td>{{ product.stockQuantity }}</td>
+
+      <td>
+
+        <button
+          (click)="editProduct(product)">
+          ✏️
+        </button>
+
+        <button
+          class="delete-btn"
+          (click)="deleteProduct(product.id)">
+          🗑️
+        </button>
+
+      </td>
+
+    </tr>
+
+  </tbody>
+
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div *ngIf="showAddForm">
+
+  <h2>Add Product</h2>
+
+ <label>Product Name</label>
+  <br>
+  <input
+    type="text"
+    [(ngModel)]="newProduct.name"
+    placeholder="Enter product name">
+
+  <br><br>
+
+  <label>Description</label>
+  <br>
+  <textarea
+    [(ngModel)]="newProduct.description"
+    placeholder="Enter product description">
+  </textarea>
+
+  <br><br>
+
+  <label>Price (₹)</label>
+  <br>
+  <input
+    type="number"
+    [(ngModel)]="newProduct.price"
+    placeholder="Enter price">
+
+  <br><br>
+
+  <label>Stock Quantity</label>
+  <br>
+  <input
+    type="number"
+    [(ngModel)]="newProduct.stockQuantity"
+    placeholder="Enter stock quantity">
+
+  <br><br>
+
+  <input
+    [(ngModel)]="newProduct.categoryId"
+    placeholder="Category Id">
+
+  <br><br>
+
+  <input
+    type="file"
+    (change)="onFileSelected($event)">
+
+  <br><br>
+
+  <button
+    (click)="saveProduct()">
+    Save Product
+  </button>
+
+</div>
+
+<hr>
+
+<div *ngIf="selectedProduct">
+
+  <h2>Edit Product</h2>
+
+  <label>Name</label>
+  <br>
+
+  <input
+    [(ngModel)]="selectedProduct.name">
+
+  <br><br>
+
+  <label>Price</label>
+  <br>
+
+  <input
+    type="number"
+    [(ngModel)]="selectedProduct.price">
+
+  <br><br>
+
+  <label>Stock</label>
+  <br>
+
+  <input
+    type="number"
+    [(ngModel)]="selectedProduct.stockQuantity">
+
+  <br><br>
+
+  <button
+    (click)="updateProduct()">
+    Save Changes
+  </button>
+
+</div>

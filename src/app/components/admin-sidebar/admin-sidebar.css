@@ -1,0 +1,41 @@
+.sidebar
+{
+    width: 220px;
+
+    height: 100vh;
+
+    background: #131921;
+
+    color: white;
+
+    padding: 20px;
+
+    position: fixed;
+
+    left: 0;
+
+    top: 0;
+}
+
+.sidebar h2
+{
+    margin-bottom: 30px;
+}
+
+.sidebar a
+{
+    display: block;
+
+    color: white;
+
+    text-decoration: none;
+
+    margin-bottom: 20px;
+
+    cursor: pointer;
+}
+
+.sidebar a:hover
+{
+    color: orange;
+}

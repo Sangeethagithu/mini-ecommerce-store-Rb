@@ -59,12 +59,33 @@ togglePassword()
     .subscribe(
       (response: any) =>
       {
-        localStorage.setItem(
-          'token',
-          response);
+       localStorage.setItem(
+  'token',
+  response);
 
-        this.router.navigate(
-          ['/products']);
+const payload =
+  JSON.parse(
+    atob(
+      response.split('.')[1]
+    ));
+
+const role =
+  payload[
+    'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+  ];
+
+console.log('ROLE:', role);
+
+if (role === 'Admin')
+{
+  this.router.navigate(
+    ['/dashboard']);
+}
+else
+{
+  this.router.navigate(
+    ['/products']);
+}
       },
       (error) =>
       {

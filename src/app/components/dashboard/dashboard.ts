@@ -3,10 +3,17 @@ import { CommonModule } from '@angular/common';
 import { CartService } from '../../services/cart';
 import { ChangeDetectorRef } from '@angular/core';
 import { ProductService } from '../../services/product';
+import { AdminSidebarComponent }
+from '../admin-sidebar/admin-sidebar';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  
+  imports:
+[
+  CommonModule,
+  AdminSidebarComponent
+],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })

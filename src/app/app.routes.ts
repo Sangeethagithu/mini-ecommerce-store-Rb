@@ -14,6 +14,8 @@ import { RegisterComponent }
 from './components/register/register';
 import { ForgotPasswordComponent }
 from './components/forgot-password/forgot-password';
+import { AdminProductsComponent }
+from './components/admin-products/admin-products';
 export const routes: Routes = [
 
     {
@@ -54,6 +56,9 @@ export const routes: Routes = [
 },{
   path: 'forgot-password',
   component: ForgotPasswordComponent
+},{
+  path: 'admin-products',
+  component: AdminProductsComponent
 },{
   path: '**',
   redirectTo: 'login'

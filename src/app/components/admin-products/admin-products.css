@@ -1,0 +1,51 @@
+table
+{
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+th,
+td
+{
+    border: 1px solid #ddd;
+
+    padding: 12px;
+
+    text-align: left;
+}
+
+th
+{
+    background: #131921;
+
+    color: white;
+}
+
+.add-btn
+{
+    margin-bottom: 20px;
+
+    background: green;
+
+    color: white;
+
+    border: none;
+
+    padding: 10px 20px;
+
+    cursor: pointer;
+}
+
+.delete-btn
+{
+    background: red;
+
+    color: white;
+
+    border: none;
+
+    padding: 8px 12px;
+
+    cursor: pointer;
+}

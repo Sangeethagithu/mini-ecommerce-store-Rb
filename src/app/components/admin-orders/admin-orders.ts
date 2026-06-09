@@ -17,7 +17,12 @@ import { ChangeDetectorRef } from '@angular/core';
 export class AdminOrdersComponent implements OnInit {
 
   orders: any[] = [];
-
+totalOrders = 0;
+pendingOrders = 0;
+processingOrders = 0;
+shippedOrders = 0;
+deliveredOrders = 0;
+cancelledOrders = 0;
   constructor(
     private cartService: CartService,
     private cdr: ChangeDetectorRef
@@ -37,7 +42,34 @@ export class AdminOrdersComponent implements OnInit {
         {
           this.orders = response;
 
-          this.cdr.detectChanges();
+this.totalOrders = this.orders.length;
+
+this.pendingOrders =
+  this.orders.filter(
+    x => x.status === 'Pending'
+  ).length;
+
+this.processingOrders =
+  this.orders.filter(
+    x => x.status === 'Processing'
+  ).length;
+
+this.shippedOrders =
+  this.orders.filter(
+    x => x.status === 'Shipped'
+  ).length;
+
+this.deliveredOrders =
+  this.orders.filter(
+    x => x.status === 'Delivered'
+  ).length;
+
+this.cancelledOrders =
+  this.orders.filter(
+    x => x.status === 'Cancelled'
+  ).length;
+
+this.cdr.detectChanges();
         },
         (error) =>
         {
