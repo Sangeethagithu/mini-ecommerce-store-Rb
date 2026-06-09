@@ -292,9 +292,24 @@ namespace Amazon.API.Repositories
                 products =
                     allProducts
                     .Where(p =>
-                        LevenshteinDistance(
-                            p.Name.ToLower(),
-                            name.ToLower()) <= 3)
+
+                        p.Name
+                         .ToLower()
+                         .Contains(
+                             name.ToLower())
+
+                        ||
+
+                        p.Name
+                         .ToLower()
+                         .Split(' ')
+                         .Any(word =>
+
+                             LevenshteinDistance(
+                                 word,
+                                 name.ToLower()) <= 2)
+
+                    )
                     .ToList();
             }
 
