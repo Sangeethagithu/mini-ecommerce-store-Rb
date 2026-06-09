@@ -24,6 +24,17 @@ export class ProductsComponent implements OnInit {
   products: any[] = [];
 searchText = '';
 suggestions: any[] = [];
+categories: any[] = [];
+
+selectedCategory = '';
+allProducts: any[] = [];
+
+minPrice = 0;
+maxPrice = 99999999;
+
+
+
+
  constructor(
   private productService: ProductService,
   private cartService: CartService,
@@ -35,6 +46,7 @@ ngOnInit(): void {
   console.log('ngOnInit called');
   console.log('Instance in ngOnInit:', this);
   this.loadProducts();
+  this.loadCategories();
   this.productService.getProducts()
     .subscribe({
   next: (response: any) => {
@@ -54,7 +66,21 @@ ngOnInit(): void {
 
     
 }
-
+loadCategories()
+{
+  this.productService
+    .getCategories()
+    .subscribe(
+      (response: any) =>
+      {
+        this.categories = response;
+        this.cdr.detectChanges();
+      },
+      error =>
+      {
+        console.log(error);
+      });
+}
 loadProducts()
 {
   this.productService
@@ -62,6 +88,7 @@ loadProducts()
     .subscribe(
       (response: any) =>
       {
+        this.allProducts = response;
         this.products = response;
 
         this.cdr.detectChanges();
@@ -70,6 +97,56 @@ loadProducts()
       {
         console.log(error);
       });
+}
+
+activePriceFilter = 'All Prices';
+setPriceRange(
+  min: number,
+  max: number,
+  label: string)
+{
+  this.minPrice = min;
+  this.maxPrice = max;
+
+  this.activePriceFilter = label;
+
+  this.applyFilters();
+}
+
+
+
+
+
+
+applyFilters()
+{
+  let filtered = this.allProducts;
+
+  // Category Filter
+  if (this.selectedCategory)
+  {
+    filtered = filtered.filter(
+      p => p.categoryId === this.selectedCategory
+    );
+  }
+
+  // Price Filter
+  filtered = filtered.filter(
+    p =>
+      p.price >= this.minPrice &&
+      p.price <= this.maxPrice
+  );
+
+  this.products = filtered;
+
+  this.cdr.detectChanges();
+}
+
+filterByCategory(categoryId: string)
+{
+  this.selectedCategory = categoryId;
+
+  this.applyFilters();
 }
 searchProducts()
 {

@@ -65,6 +65,85 @@
 
 <h1>Products</h1>
 
+<div class="category-filter">
+
+  <button
+    (click)="filterByCategory('')">
+
+    All
+
+  </button>
+
+  <button
+    *ngFor="let category of categories"
+    (click)="filterByCategory(category.id)">
+
+    {{ category.name }}
+
+  </button>
+
+</div>
+
+<div class="price-buttons">
+
+  <button
+    (click)="setPriceRange(
+      0,
+      25000,
+      '₹0 - ₹25K')">
+
+    ₹0 - ₹25K
+
+  </button>
+
+  <button
+    (click)="setPriceRange(
+      25000,
+      50000,
+      '₹25K - ₹50K')">
+
+    ₹25K - ₹50K
+
+  </button>
+
+  <button
+    (click)="setPriceRange(
+      50000,
+      100000,
+      '₹50K - ₹100K')">
+
+    ₹50K - ₹100K
+
+  </button>
+
+  <button
+    (click)="setPriceRange(
+      100000,
+      99999999,
+      '₹100K+')">
+
+    ₹100K+
+
+  </button>
+
+  <button
+    (click)="setPriceRange(
+      0,
+      99999999,
+      'All Prices')">
+
+    All Prices
+
+  </button>
+
+</div>
+
+<p>
+  Current Price Filter:
+  <strong>
+    {{ activePriceFilter }}
+  </strong>
+</p>
 <div class="product-grid">
 
   <div
