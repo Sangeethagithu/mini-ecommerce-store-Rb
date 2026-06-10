@@ -44,10 +44,14 @@ namespace Amazon.API.Controllers
 
         //updating PUT id comes from url
         
+        
+
         [HttpPut("{id}")]
-        public IActionResult UpdateProduct(Guid id, UpdateProductDto dto)
+        [Consumes("multipart/form-data")]
+        public IActionResult UpdateProduct(
+    Guid id,
+    [FromForm] UpdateProductDto dto)
         {
-            Console.WriteLine("UPDATE CONTROLLER HIT");
             productRepository.UpdateProduct(id, dto);
 
             return Ok("Product updated successfully");

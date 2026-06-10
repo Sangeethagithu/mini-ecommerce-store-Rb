@@ -1,5 +1,7 @@
 ﻿
 
+using System.ComponentModel.DataAnnotations;
+
 namespace Amazon.API.Models.DTOs.Product
 {
     public class UpdateProductDto
@@ -10,9 +12,11 @@ namespace Amazon.API.Models.DTOs.Product
 
         public decimal Price { get; set; }
 
+        [Range(1, int.MaxValue,
+       ErrorMessage = "Stock must be at least 1")]
         public int StockQuantity { get; set; }
+        public IFormFile? Image { get; set; } //image file
 
-        public string ImageUrl { get; set; }
 
         public Guid CategoryId { get; set; }
     }

@@ -191,26 +191,42 @@ namespace Amazon.API.Repositories
             string connectionString =
                 configuration.GetConnectionString("DefaultConnection")!;
 
+            string fileName = "";
+
+            if (dto.Image != null)
+            {
+                fileName =
+                    Guid.NewGuid().ToString() +
+                    Path.GetExtension(dto.Image.FileName);
+
+                string imagePath =
+                    Path.Combine(
+                        environment.ContentRootPath,
+                        "Images",
+                        fileName);
+
+                using (FileStream stream =
+                    new FileStream(imagePath, FileMode.Create))
+                {
+                    dto.Image.CopyTo(stream);
+                }
+            }
+
             SqlConnection connection =
                 new SqlConnection(connectionString);
 
             SqlCommand command =
                 new SqlCommand("UpdateProduct", connection);
 
-            command.CommandType = CommandType.StoredProcedure;
+            command.CommandType =
+                CommandType.StoredProcedure;
 
             command.Parameters.AddWithValue("@Id", id);
-
             command.Parameters.AddWithValue("@Name", dto.Name);
-
             command.Parameters.AddWithValue("@Description", dto.Description);
-
             command.Parameters.AddWithValue("@Price", dto.Price);
-
             command.Parameters.AddWithValue("@StockQuantity", dto.StockQuantity);
-
-            command.Parameters.AddWithValue("@ImageUrl", dto.ImageUrl);
-
+            command.Parameters.AddWithValue("@ImageUrl", fileName);
             command.Parameters.AddWithValue("@CategoryId", dto.CategoryId);
 
             connection.Open();
@@ -219,7 +235,6 @@ namespace Amazon.API.Repositories
 
             connection.Close();
         }
-
 
         //delete operation
         public void DeleteProduct(Guid id)
@@ -320,6 +335,12 @@ namespace Amazon.API.Repositories
         public void UpdateStock(
     UpdateStockDto dto)
         {
+
+            if (dto.StockQuantity < 1)
+            {
+                throw new Exception(
+                    "Stock quantity cannot be less than 1");
+            }
             string connectionString =
                 configuration.GetConnectionString(
                     "DefaultConnection")!;
