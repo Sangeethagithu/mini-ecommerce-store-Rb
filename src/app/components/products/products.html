@@ -144,6 +144,18 @@
     {{ activePriceFilter }}
   </strong>
 </p>
+
+<div
+  *ngIf="products.length === 0"
+  class="no-products">
+
+  No products found for "{{ searchText }}".
+  Try a different keyword.
+
+</div>
+
+
+
 <div class="product-grid">
 
   <div

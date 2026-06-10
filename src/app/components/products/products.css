@@ -240,7 +240,12 @@
   border-radius: 6px;
 }
 
-
+.no-products {
+  text-align: center;
+  margin: 30px;
+  font-size: 18px;
+  font-weight: 500;
+}
 
 
 
