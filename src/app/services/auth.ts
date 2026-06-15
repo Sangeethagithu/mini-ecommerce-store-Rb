@@ -20,14 +20,11 @@ register(data: any)
     });
 }
   login(data: any) {
-    return this.http.post(//return observable"request sent wait i will notify" not token
-      'https://localhost:7113/api/Auth/login',
-      data,
-      {
-        responseType: 'text'
-      }
-    );
-  }
+  return this.http.post(
+    'https://localhost:7113/api/Auth/login',
+    data
+  );
+}
   forgotPassword(data: any)
 {
   return this.http.put(

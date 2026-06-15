@@ -1,62 +1,166 @@
-<div class="auth-container">
+<form [formGroup]="registerForm" (ngSubmit)="register()">
 
- <a routerLink="/login">
-  ← Back to Login
-</a>
-  <h2>Create Account</h2>
+  <div class="auth-container">
 
-  <label>Name</label>
-  <br>
+    <a routerLink="/login">
+      ← Back to Login
+    </a>
 
-  <input
-    type="text"
-    [(ngModel)]="name">
+    <h2>Create Account</h2>
 
-  <br><br>
+    
 
-  <label>Email</label>
-  <br>
-
-  <input
-    type="email"
-    [(ngModel)]="email">
-
-  <br><br>
-
-  <label>Password</label>
-  <br>
-
-  <div class="password-container">
+    <label>Name</label>
+    <br>
 
     <input
-      [type]="showPassword ? 'text' : 'password'"
-      [(ngModel)]="password">
+      type="text"
+      formControlName="name">
 
-    <button
+    @if(registerForm.get('name')?.touched &&
+        registerForm.get('name')?.hasError('required'))
+    {
+      <small style="color:red">
+        Name is required
+      </small>
+    }
+
+    @if(registerForm.get('name')?.touched &&
+        registerForm.get('name')?.hasError('minlength'))
+    {
+      <small style="color:red">
+        Name must be at least 3 characters
+      </small>
+    }
+
+    <br><br>
+
+    
+
+    <label>Email</label>
+    <br>
+
+    <input
+      type="email"
+      formControlName="email">
+
+    @if(registerForm.get('email')?.touched &&
+        registerForm.get('email')?.hasError('required'))
+    {
+      <small style="color:red">
+        Email is required
+      </small>
+    }
+
+    @if(registerForm.get('email')?.touched &&
+        registerForm.get('email')?.hasError('pattern'))
+    {
+      <small style="color:red">
+        Enter a valid email address
+      </small>
+    }
+
+    <br><br>
+
+    
+
+    <label>Password</label>
+    <br>
+
+    <div class="password-container">
+
+      <input
+        [type]="showPassword ? 'text' : 'password'"
+        formControlName="password">
+
+      <button
+        type="button"
+        (click)="togglePassword()">
+
+        👁
+
+      </button>
+
+    </div>
+
+    @if(registerForm.get('password')?.touched &&
+        registerForm.get('password')?.hasError('required'))
+    {
+      <small style="color:red">
+        Password is required
+      </small>
+    }
+
+    @if(registerForm.get('password')?.touched &&
+        registerForm.get('password')?.hasError('pattern'))
+    {
+      <small style="color:red">
+        Password must contain:
+        <br>
+        • Minimum 8 characters
+        <br>
+        • One uppercase letter
+        <br>
+        • One lowercase letter
+        <br>
+        • One number
+        <br>
+        • One special character
+      </small>
+    }
+
+    <br><br>
+    <br><br>
+
+<label>Confirm Password</label>
+
+<br>
+
+<div class="password-container">
+
+  <input
+      [type]="showConfirmPassword ? 'text' : 'password'"
+      formControlName="confirmPassword">
+
+  <button
       type="button"
-      (click)="togglePassword()">
+      class="eye-btn"
+      (click)="toggleConfirmPassword()">
 
       👁
+
+  </button>
+
+</div>
+
+@if(registerForm.get('confirmPassword')?.touched &&
+    registerForm.get('confirmPassword')?.hasError('required'))
+{
+    <small style="color:red">
+
+        Confirm Password is required
+
+    </small>
+}
+
+@if(registerForm.hasError('passwordMismatch') &&
+    registerForm.get('confirmPassword')?.touched)
+{
+    <small style="color:red">
+
+        Passwords do not match
+
+    </small>
+}
+
+    <button
+      type="submit"
+      [disabled]="registerForm.invalid">
+
+      Create Account
 
     </button>
 
   </div>
 
-  <br>
-
-  <p>Password must:</p>
-
-  <ul>
-    <li>Be at least 8 characters</li>
-    <li>Contain 1 uppercase letter</li>
-    <li>Contain 1 number</li>
-  </ul>
-
-  <button
-    (click)="register()">
-
-    Create Account
-
-  </button>
-
-</div>
+</form>

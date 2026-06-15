@@ -1,84 +1,114 @@
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { RouterModule } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators
+} from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+import { passwordMatchValidator } from '../../validators/confirm-password.validator';
 import { AuthService } from '../../services/auth';
+import { EmailValidator } from '../../validators/email.validator';
+import { PasswordValidator } from '../../validators/password.validator';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [FormsModule, RouterModule],
+  imports: [
+    ReactiveFormsModule,
+    RouterModule
+  ],
   templateUrl: './register.html',
   styleUrl: './register.css'
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
 
-  name = '';
-
-  email = '';
-
-  password = '';
+  registerForm!: FormGroup;
 
   showPassword = false;
-
+showConfirmPassword = false;
   constructor(
+    private fb: FormBuilder,
     private authService: AuthService,
     private router: Router
-  )
+  ) {}
+ngOnInit(): void {
+
+  this.registerForm = this.fb.group({
+
+    name: [
+      '',
+      [
+        Validators.required,
+        Validators.minLength(3)
+      ]
+    ],
+
+    email: [
+      '',
+      EmailValidator.emailValidators
+    ],
+
+    password: [
+      '',
+      PasswordValidator.passwordValidators
+    ],
+
+    confirmPassword: [
+      '',
+      Validators.required
+    ]
+
+  },
   {
+    validators: passwordMatchValidator()
+  });
+
+}
+
+  togglePassword() {
+
+    this.showPassword = !this.showPassword;
+
   }
-
-  register()
-  {
-    if (!this.name ||
-    !this.email ||
-    !this.password)
-{
-    alert(
-      'Please fill all fields');
-
-    return;
+  toggleConfirmPassword() {
+  this.showConfirmPassword = !this.showConfirmPassword;
 }
 
-const emailPattern =
- /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  register() {
 
-if (!emailPattern.test(this.email))
-{
-    alert(
-      'Please enter a valid email');
+    if (this.registerForm.invalid) {
 
-    return;
-}
-    const data =
-    {
-      name: this.name,
-      email: this.email,
-      password: this.password
-    };
+      this.registerForm.markAllAsTouched();
+
+      return;
+
+    }
+
+    const data = this.registerForm.value;
 
     this.authService
       .register(data)
-      .subscribe(
-        (response) =>
-        {
+      .subscribe({
+
+        next: (response) => {
+
           alert(response);
 
-          this.router.navigate(
-            ['/login']);
+          this.router.navigate(['/login']);
+
         },
-        (error) =>
-        {
+
+        error: (error) => {
+
           console.log(error);
 
-          alert(
-            error.error);
-        });
+          alert(error.error);
+
+        }
+
+      });
+
   }
 
-  togglePassword()
-  {
-    this.showPassword =
-      !this.showPassword;
-  }
 }

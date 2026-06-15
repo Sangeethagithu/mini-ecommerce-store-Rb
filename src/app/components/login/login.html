@@ -1,68 +1,106 @@
-<form (ngSubmit)="login()">
+<form [formGroup]="loginForm" (ngSubmit)="login()">
 
-<div class="auth-container">
+  <div class="auth-container">
 
-  <h1 class="logo">
-    AmazonMini
-  </h1>
+    <h1 class="logo">
+      AmazonMini
+    </h1>
 
-  <h2>Sign In</h2>
+    <h2>Sign In</h2>
 
-  <label>Email</label>
+    <label>Email</label>
 
-  <input
-    type="email"
-    [(ngModel)]="email"
-    name="email">
+    <input
+      type="email"
+      formControlName="email">
 
-  <br><br>
+    @if(loginForm.get('email')?.touched &&
+        loginForm.get('email')?.hasError('required'))
+    {
+      <small style="color:red">
+        Email is required
+      </small>
+    }
 
-  <label>Password</label>
+    @if(loginForm.get('email')?.touched &&
+        loginForm.get('email')?.hasError('pattern'))
+    {
+      <small style="color:red">
+        Enter a valid email
+      </small>
+    }
 
+    <br><br>
 
-<div class="password-container">
+    <label>Password</label>
 
-  <input
-    [type]="showPassword ? 'text' : 'password'"
-    [(ngModel)]="password"
-    name="password">
+    <div class="password-container">
 
-  <button
-    class="eye-btn"
-    type="button"
-    (click)="togglePassword()">
+      <input
+        [type]="showPassword ? 'text' : 'password'"
+        formControlName="password">
 
-    👁
+      <button
+        class="eye-btn"
+        type="button"
+        (click)="togglePassword()">
 
-  </button>
+        👁
 
-</div>
-<br>
-<p>
- <a routerLink="/forgot-password">
-  Forgot Password?
-</a>
-</p>
-  <br>
+      </button>
 
-  <button type="submit">
-    Login
-  </button>
+    </div>
 
-  <hr>
+    @if(loginForm.get('password')?.touched &&
+        loginForm.get('password')?.hasError('required'))
+    {
+      <small style="color:red">
+        Password is required
+      </small>
+    }
 
-  <p>
-    New to AmazonMini?
-  </p>
+    @if(loginForm.get('password')?.touched &&
+        loginForm.get('password')?.hasError('minlength'))
+    {
+      <small style="color:red">
+        Password must contain at least 6 characters
+      </small>
+    }
 
-  <button
-    type="button"
-    routerLink="/register">
+    <br>
 
-    Create Account →
+    <p>
+      <a routerLink="/forgot-password">
+        Forgot Password?
+      </a>
+    </p>
 
-  </button>
+    <br>
 
-</div>
+    <button
+      type="submit"
+      [disabled]="loginForm.invalid">
+
+      Login
+
+    </button>
+
+    <hr>
+
+    <p>
+      New to AmazonMini?
+    </p>
+
+    <button
+          class="create-btn"
+
+      type="button"
+      routerLink="/register">
+
+      Create Account →
+
+    </button>
+
+  </div>
 
 </form>
