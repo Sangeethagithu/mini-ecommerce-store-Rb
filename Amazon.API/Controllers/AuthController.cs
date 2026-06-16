@@ -1,8 +1,10 @@
 ﻿using Amazon.API.Models.DTOs.Auth;
 using Amazon.API.Repositories;
-using Microsoft.AspNetCore.Mvc;
 using Amazon.API.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Security.Claims;
 namespace Amazon.API.Controllers
 {
     [ApiController] //tell its wed api controller
@@ -114,7 +116,7 @@ namespace Amazon.API.Controllers
         //login user
         [HttpPost("login")]
         public IActionResult Login(
-    LoginDto dto)
+            LoginDto dto)
         {
             var user =
                 authRepository.Login(dto);
@@ -125,12 +127,77 @@ namespace Amazon.API.Controllers
                     "Invalid email or password");
             }
 
-            string token =
-              jwtService.GenerateToken(user);
+            string accessToken =
+                jwtService.GenerateToken(user);
 
-            return Ok(token);
+            string refreshToken =
+                jwtService.GenerateRefreshToken();
+
+            authRepository.SaveRefreshToken(
+                user.Id,
+                refreshToken);
+
+            return Ok(
+                new AuthResponseDto
+                {
+                    AccessToken = accessToken,
+                    RefreshToken = refreshToken
+                });
         }
 
- 
+
+        //refresh token
+        [HttpPost("refresh-token")]
+        public IActionResult RefreshToken(
+    RefreshTokenDto dto)
+        {
+            var user =
+                authRepository.GetUserByRefreshToken(
+                    dto.RefreshToken);
+
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            string accessToken =
+                jwtService.GenerateToken(user);
+
+            string refreshToken =
+                jwtService.GenerateRefreshToken();
+
+            authRepository.SaveRefreshToken(
+                user.Id,
+                refreshToken);
+
+            return Ok(
+                new AuthResponseDto
+                {
+                    AccessToken = accessToken,
+                    RefreshToken = refreshToken
+                });
+        }
+        //logout 
+        [Authorize]
+        [HttpPost("logout")]
+        public IActionResult Logout()
+        {
+            string? email =
+                User.FindFirst(
+                    ClaimTypes.Email)?.Value;
+
+            if (email == null)
+            {
+                return Unauthorized();
+            }
+
+            authRepository.RemoveRefreshTokenByEmail(
+                email);
+
+            return Ok(
+                "Logged out successfully");
+        }
+
+
     }
 }

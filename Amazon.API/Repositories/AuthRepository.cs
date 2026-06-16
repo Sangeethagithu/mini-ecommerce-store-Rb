@@ -3,6 +3,7 @@ using Microsoft.Data.SqlClient;
 using System.Data;
 using Amazon.API.Services;
 using Amazon.API.Model.Domain;
+using Microsoft.EntityFrameworkCore;
 namespace Amazon.API.Repositories
 {
     public class AuthRepository//handle register and login
@@ -210,6 +211,148 @@ namespace Amazon.API.Repositories
             connection.Close();
 
             return user;
+        }
+
+       // SavingChangesEventArgs refresh token so that communicate with db
+        public void SaveRefreshToken(
+    Guid userId,
+    string refreshToken)
+        {
+            string connectionString =
+                configuration.GetConnectionString(
+                    "DefaultConnection")!;
+
+            using SqlConnection connection =
+                new SqlConnection(connectionString);
+
+            SqlCommand command =
+                new SqlCommand(
+                    @"UPDATE Users
+              SET RefreshToken=@RefreshToken,
+                  RefreshTokenExpiry=@Expiry
+              WHERE Id=@Id",
+                    connection);
+
+            command.Parameters.AddWithValue(
+                "@RefreshToken",
+                refreshToken);
+
+            command.Parameters.AddWithValue(
+                "@Expiry",
+                DateTime.UtcNow.AddDays(30));
+
+            command.Parameters.AddWithValue(
+                "@Id",
+                userId);
+
+            connection.Open();
+
+            command.ExecuteNonQuery();
+        }
+        //find user with help of  refres token 
+        public User? GetUserByRefreshToken(
+    string refreshToken)
+        {
+            string connectionString =
+                configuration.GetConnectionString(
+                    "DefaultConnection")!;
+
+            using SqlConnection connection =
+                new SqlConnection(connectionString);
+
+            SqlCommand command =
+                new SqlCommand(
+                    @"SELECT *
+              FROM Users
+              WHERE RefreshToken=@RefreshToken
+              AND RefreshTokenExpiry > @Now",
+                    connection);
+
+            command.Parameters.AddWithValue(
+                "@RefreshToken",
+                refreshToken);
+
+            command.Parameters.AddWithValue(
+                "@Now",
+                DateTime.UtcNow);
+
+            connection.Open();
+
+            SqlDataReader reader =
+                command.ExecuteReader();
+
+            if (!reader.Read())
+                return null;
+
+            return new User
+            {
+                Id = Guid.Parse(
+                    reader["Id"].ToString()!),
+
+                Name =
+                    reader["Name"].ToString()!,
+
+                Email =
+                    reader["Email"].ToString()!,
+
+                Role =
+                    reader["Role"].ToString()!
+            };
+        }
+
+        //logout user remove refresh token by userid
+        public void RemoveRefreshToken(
+    Guid userId)
+        {
+            string connectionString =
+                configuration.GetConnectionString(
+                    "DefaultConnection")!;
+
+            using SqlConnection connection =
+                new SqlConnection(connectionString);
+
+            SqlCommand command =
+                new SqlCommand(
+                    @"UPDATE Users
+              SET RefreshToken = NULL,
+                  RefreshTokenExpiry = NULL
+              WHERE Id = @Id",
+                    connection);
+
+            command.Parameters.AddWithValue(
+                "@Id",
+                userId);
+
+            connection.Open();
+
+            command.ExecuteNonQuery();
+        }
+        //remove refresh token by email
+        public void RemoveRefreshTokenByEmail(
+    string email)
+        {
+            string connectionString =
+                configuration.GetConnectionString(
+                    "DefaultConnection")!;
+
+            using SqlConnection connection =
+                new SqlConnection(connectionString);
+
+            SqlCommand command =
+                new SqlCommand(
+                    @"UPDATE Users
+              SET RefreshToken = NULL,
+                  RefreshTokenExpiry = NULL
+              WHERE Email = @Email",
+                    connection);
+
+            command.Parameters.AddWithValue(
+                "@Email",
+                email);
+
+            connection.Open();
+
+            command.ExecuteNonQuery();
         }
     }
 }

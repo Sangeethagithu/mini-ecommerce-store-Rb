@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Amazon.API.Model.Domain;
+using System.Security.Cryptography;
 namespace Amazon.API.Services
 {
     public class JwtService
@@ -54,13 +55,31 @@ namespace Amazon.API.Services
                         claims,
 
                     expires:
-                        DateTime.Now.AddHours(1),
+                        
+    DateTime.UtcNow.AddMinutes(15),//usd utcnow to avoid timezone issues shortlived acces token only 15mins
 
                     signingCredentials:
                         credentials);
 
             return new JwtSecurityTokenHandler()
                 .WriteToken(token);
+        }
+
+
+
+
+        // Generate a secure random key for JWT signing-refresh token 
+        public string GenerateRefreshToken()
+        {
+            byte[] bytes = new byte[64];//array of 64 bytes created
+
+            using var rng =
+                RandomNumberGenerator.Create();
+            //crytographically secure random number generator-unpredictable value created
+            //os randomness not any algo like bcrypt
+            rng.GetBytes(bytes);//fill that array with 64bytes
+
+            return Convert.ToBase64String(bytes);//convert to string
         }
     }
 }

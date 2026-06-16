@@ -191,7 +191,7 @@ namespace Amazon.API.Repositories
             string connectionString =
                 configuration.GetConnectionString("DefaultConnection")!;
 
-            string fileName = "";
+            string? fileName = null;
 
             if (dto.Image != null)
             {
@@ -226,7 +226,12 @@ namespace Amazon.API.Repositories
             command.Parameters.AddWithValue("@Description", dto.Description);
             command.Parameters.AddWithValue("@Price", dto.Price);
             command.Parameters.AddWithValue("@StockQuantity", dto.StockQuantity);
-            command.Parameters.AddWithValue("@ImageUrl", fileName);
+            if (fileName != null)
+            {
+                command.Parameters.AddWithValue(
+                    "@ImageUrl",
+                    fileName);
+            }
             command.Parameters.AddWithValue("@CategoryId", dto.CategoryId);
 
             connection.Open();
@@ -304,27 +309,34 @@ namespace Amazon.API.Repositories
                 var allProducts =
                     GetAllProducts();
 
+
+
+
+
+                var searchWords =
+                    name
+                    .ToLower()
+                    .Split(' ',
+                        StringSplitOptions.RemoveEmptyEntries);
+
                 products =
                     allProducts
                     .Where(p =>
+                    {
+                        var productWords =
+                            p.Name
+                             .ToLower()
+                             .Split(' ',
+                                 StringSplitOptions.RemoveEmptyEntries);
 
-                        p.Name
-                         .ToLower()
-                         .Contains(
-                             name.ToLower())
+                        return searchWords.All(searchWord =>
 
-                        ||
+                            productWords.Any(productWord =>
 
-                        p.Name
-                         .ToLower()
-                         .Split(' ')
-                         .Any(word =>
-
-                             LevenshteinDistance(
-                                 word,
-                                 name.ToLower()) <= 2)
-
-                    )
+                                LevenshteinDistance(
+                                    productWord,
+                                    searchWord) <= 2));
+                    })
                     .ToList();
             }
 
@@ -448,7 +460,7 @@ namespace Amazon.API.Repositories
                         : 1;
 
                     d[i, j] =
-                        Math.Min(
+                        Math.Min(//using dp cal no of edits to trun1 wred to other
                             Math.Min(
                                 d[i - 1, j] + 1,
                                 d[i, j - 1] + 1),

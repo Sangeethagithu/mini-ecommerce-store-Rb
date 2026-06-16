@@ -15,7 +15,7 @@ namespace Amazon.API.Repositories
         }
 
 
-        //new style
+        //new style so only that user get his cart
         public Guid? GetCartIdByEmail(string email)
         {
             string connectionString =
