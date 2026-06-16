@@ -11,17 +11,34 @@ import {
 authInterceptor
 }
 from './interceptors/auth.interceptor';
-
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = { //configuring angular
-  providers: [  //services provided
+  
+
+  providers: [
+
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes), //use routes
+
+    provideRouter(routes),
+
     provideHttpClient(
-  withInterceptors([
-    authInterceptor
-  ])
-)//enable api connect the backend
+      withInterceptors([
+        authInterceptor
+      ])
+    ),
+
+    provideAnimationsAsync()
+
   ]
+
+
+
+
+
+
+
+
+
 };

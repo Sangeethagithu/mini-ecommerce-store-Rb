@@ -10,7 +10,7 @@ import { passwordMatchValidator } from '../../validators/confirm-password.valida
 import { AuthService } from '../../services/auth';
 import { EmailValidator } from '../../validators/email.validator';
 import { PasswordValidator } from '../../validators/password.validator';
-
+import { NotificationService } from '../../services/notification';
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -30,7 +30,7 @@ showConfirmPassword = false;
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router, private notification: NotificationService
   ) {}
 ngOnInit(): void {
 
@@ -77,38 +77,41 @@ ngOnInit(): void {
 
   register() {
 
-    if (this.registerForm.invalid) {
+  if (this.registerForm.invalid) {
 
-      this.registerForm.markAllAsTouched();
+    this.registerForm.markAllAsTouched();
 
-      return;
+    this.notification.error(
+      'Please correct the highlighted errors.'
+    );
 
-    }
-
-    const data = this.registerForm.value;
-
-    this.authService
-      .register(data)
-      .subscribe({
-
-        next: (response) => {
-
-          alert(response);
-
-          this.router.navigate(['/login']);
-
-        },
-
-        error: (error) => {
-
-          console.log(error);
-
-          alert(error.error);
-
-        }
-
-      });
+    return;
 
   }
 
+  const data = this.registerForm.value;
+
+  this.authService
+    .register(data)
+    .subscribe({
+
+      next: (response) => {
+
+        this.notification.success(response);
+
+        this.router.navigate(['/login']);
+
+      },
+
+      error: (error) => {
+
+        console.log(error);
+
+        this.notification.error(error.error);
+
+      }
+
+    });
+
+}
 }

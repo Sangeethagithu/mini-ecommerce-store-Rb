@@ -6,7 +6,7 @@ import {
   Validators
 } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-
+import { NotificationService } from '../../services/notification';
 import { AuthService } from '../../services/auth';
 import { EmailValidator } from '../../validators/email.validator';
 import { PasswordValidator } from '../../validators/password.validator';
@@ -32,7 +32,7 @@ export class ForgotPasswordComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,private notification: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -74,6 +74,9 @@ export class ForgotPasswordComponent implements OnInit {
     if (this.forgotPasswordForm.invalid) {
 
       this.forgotPasswordForm.markAllAsTouched();
+      this.notification.error(
+  'Please correct the highlighted errors.'
+);
 
       return;
 
@@ -90,7 +93,7 @@ export class ForgotPasswordComponent implements OnInit {
 
         next: (response) => {
 
-          alert(response);
+          this.notification.success(response);
 
           this.router.navigate(['/login']);
 
@@ -100,7 +103,7 @@ export class ForgotPasswordComponent implements OnInit {
 
           console.log(error);
 
-          alert(error.error);
+          this.notification.error(error.error);
 
         }
 

@@ -3,6 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../services/product';
 import { ChangeDetectorRef } from '@angular/core';
+import { NotificationService } from '../../services/notification';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog';
 @Component({
   selector: 'app-admin-categories',
   standalone: true,
@@ -28,7 +31,9 @@ implements OnInit
   selectedCategory: any = null;
 
   constructor(
-    private productService: ProductService,  private cdr: ChangeDetectorRef
+    private productService: ProductService,  private cdr: ChangeDetectorRef,
+    private notification: NotificationService,
+     private dialog: MatDialog
   ) {}
 
   ngOnInit(): void
@@ -59,7 +64,9 @@ implements OnInit
       .subscribe(
         () =>
         {
-          alert('Category Added');
+           this.notification.success(
+          'Category Added Successfully'
+        )
 
           this.newCategory =
           {
@@ -90,7 +97,9 @@ implements OnInit
       .subscribe(
         () =>
         {
-          alert('Category Updated');
+            this.notification.success(
+          'Category Updated Successfully'
+        );
 
           this.selectedCategory = null;
 
@@ -99,20 +108,59 @@ implements OnInit
   }
 
   deleteCategory(id: string)
-  {
-    if (!confirm('Delete category?'))
+{
+
+  const dialogRef = this.dialog.open(
+    ConfirmationDialogComponent,
     {
-      return;
-    }
+      width: '350px',
 
-    this.productService
-      .deleteCategory(id)
-      .subscribe(
-        () =>
-        {
-          alert('Category Deleted');
+      data:
+      {
+        title: 'Delete Category',
 
-          this.loadCategories();
-        });
-  }
+        message: 'Are you sure you want to delete this category?'
+      }
+    });
+
+  dialogRef.afterClosed()
+    .subscribe(result =>
+    {
+
+      if(result)
+      {
+
+        this.productService
+          .deleteCategory(id)
+          .subscribe({
+
+            next: () =>
+            {
+
+              this.notification.success(
+                'Category Deleted Successfully'
+              );
+
+              this.loadCategories();
+
+            },
+
+            error: error =>
+            {
+
+              console.log(error);
+
+              this.notification.error(
+                'Failed to delete category'
+              );
+
+            }
+
+          });
+
+      }
+
+    });
+
+}
 }

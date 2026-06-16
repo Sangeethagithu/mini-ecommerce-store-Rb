@@ -7,7 +7,17 @@ import {
 } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth';
+import { NotificationService }
+from '../../services/notification';
+import {
+  tap,
+  catchError,
+  finalize
+} from 'rxjs/operators';
 
+import {
+  throwError
+} from 'rxjs';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -24,7 +34,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,private notification: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -50,17 +60,30 @@ export class LoginComponent implements OnInit {
     this.showPassword = !this.showPassword;
   }
 
-  login() {
+  login()
+{
 
-    if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
-      return;
-    }
+  if (this.loginForm.invalid)
+  {
+    this.loginForm.markAllAsTouched();
 
-    const data = this.loginForm.value;
+    this.notification.error(
+      'Please correct the highlighted errors.'
+    );
 
-    this.authService.login(data).subscribe({
-      next: (response: any) => {
+    return;
+  }
+
+  const data =
+    this.loginForm.value;
+
+  this.authService
+    .login(data)
+
+    .pipe(
+
+      tap((response: any) =>
+      {
 
         localStorage.setItem(
           'token',
@@ -72,33 +95,63 @@ export class LoginComponent implements OnInit {
           response.refreshToken
         );
 
-        const payload = JSON.parse(
-          atob(response.accessToken.split('.')[1])
-        );
+        const payload =
+          JSON.parse(
+            atob(
+              response.accessToken.split('.')[1]
+            )
+          );
 
         const role =
           payload[
-            'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+          'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
           ];
 
-        console.log(role);
+        this.notification.success(
+          'Login Successful'
+        );
 
-        if (role === 'Admin') {
-          this.router.navigate(['/dashboard']);
+        if(role === 'Admin')
+        {
+          this.router.navigate(
+            ['/dashboard']
+          );
         }
-        else {
-          this.router.navigate(['/products']);
+        else
+        {
+          this.router.navigate(
+            ['/products']
+          );
         }
 
-      },
+      }),
 
-      error: (error) => {
+      catchError(error =>
+      {
+
         console.log(error);
 
-        alert('Invalid Email or Password');
-      }
-    });
+        this.notification.error(
+          'Invalid Email or Password'
+        );
 
-  }
+        return throwError(() => error);
+
+      }),
+
+      finalize(() =>
+      {
+
+        console.log(
+          'Login request completed.'
+        );
+
+      })
+
+    )
+
+    .subscribe();
+
+}
 
 }

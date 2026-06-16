@@ -1,42 +1,49 @@
 <h1>Product Management</h1>
 
-<button
-  class="add-btn"
-  (click)="addProduct()">
-  + Add Product
-</button>
-
-
-<div class="search-container">
-
-  <input
-    type="text"
-    placeholder="Search Products"
-    [(ngModel)]="searchText"
-    (input)="searchProducts()">
-
-  <button>
-    🔍
-  </button>
+<div class="top-bar">
 
   <button
-    *ngIf="searchText"
-    (click)="searchText=''; loadProducts()">
+    class="add-btn"
+    (click)="addProduct()">
 
-    ✖
+    + Add Product
 
   </button>
 
-  <div
-    *ngIf="suggestions.length > 0"
-    class="suggestions">
+  <div class="search-container">
+
+    <input
+      type="text"
+      placeholder="Search Products"
+      [(ngModel)]="searchText"
+      (input)="searchProducts()">
+
+    <button>
+
+      🔍
+
+    </button>
+
+    <button
+      *ngIf="searchText"
+      (click)="searchText=''; loadProducts()">
+
+      ✖
+
+    </button>
 
     <div
-      *ngFor="let item of suggestions"
-      class="suggestion-item"
-      (click)="selectProduct(item)">
+      *ngIf="suggestions.length > 0"
+      class="suggestions">
 
-      {{ item.name }}
+      <div
+        *ngFor="let item of suggestions"
+        class="suggestion-item"
+        (click)="selectProduct(item)">
+
+        {{ item.name }}
+
+      </div>
 
     </div>
 
@@ -46,40 +53,63 @@
 
 <br>
 
-
-
 <table>
 
   <thead>
+
     <tr>
+
       <th>Product</th>
+
       <th>Price</th>
+
       <th>Stock</th>
+
       <th>Actions</th>
+
     </tr>
+
   </thead>
 
   <tbody>
 
-    <tr *ngFor="let product of products">
+    <tr
+      *ngFor="let product of products">
 
-      <td>{{ product.name }}</td>
+      <td>
 
-      <td>₹{{ product.price }}</td>
+        {{ product.name }}
 
-      <td>{{ product.stockQuantity }}</td>
+      </td>
+
+      <td>
+
+        ₹{{ product.price }}
+
+      </td>
+
+      <td>
+
+        {{ product.stockQuantity }}
+
+      </td>
 
       <td>
 
         <button
+          class="edit-btn"
           (click)="editProduct(product)">
-          ✏️
+
+          ✏️ Edit
+
         </button>
 
         <button
           class="delete-btn"
           (click)="deleteProduct(product.id)">
-          🗑️
+
+          🗑️ Delete
+
         </button>
 
       </td>
@@ -90,153 +120,20 @@
 
 </table>
 
+<div
+  *ngIf="products.length === 0"
+  class="empty-state">
 
+  <h3>
 
+    No Products Found
 
-<div *ngIf="showAddForm">
+  </h3>
 
-  <h2>Add Product</h2>
+  <p>
 
- <label>Product Name</label>
-  <br>
-  <input
-    type="text"
-    [(ngModel)]="newProduct.name"
-    placeholder="Enter product name">
+    Try another search keyword.
 
-  <br><br>
-
-  <label>Description</label>
-  <br>
-  <textarea
-    [(ngModel)]="newProduct.description"
-    placeholder="Enter product description">
-  </textarea>
-
-  <br><br>
-
-  <label>Price (₹)</label>
-  <br>
-  <input
-    type="number"
-    [(ngModel)]="newProduct.price"
-    placeholder="Enter price">
-
-  <br><br>
-
-  <label>Stock Quantity</label>
-  <br>
-  <input
-    type="number"
-    min="1"
-    [(ngModel)]="newProduct.stockQuantity"
-    placeholder="Enter stock quantity">
-
-  <br><br>
-
-  <label>Category</label>
-<br>
-
-<select
-  [(ngModel)]="newProduct.categoryId">
-
-  <option value="">
-    Select Category
-  </option>
-
-  <option
-    *ngFor="let category of categories"
-    [value]="category.id" required>
-
-    {{ category.name }}
-
-  </option>
-
-</select>
-
-  <br><br>
-
-  <input
-    type="file"
-    (change)="onFileSelected($event)">
-
-  <br><br>
-
-  <button
-    (click)="saveProduct()">
-    Save Product
-  </button>
-
-</div>
-
-<hr>
-
-<div *ngIf="selectedProduct">
-
-  <h2>Edit Product</h2>
-
-  <label>Name</label>
-  <br>
-
-  <input
-    [(ngModel)]="selectedProduct.name">
-
-  <br><br>
-  <label>Description</label>
-<br>
-
-<textarea
-  [(ngModel)]="selectedProduct.description">
-</textarea>
-
-<br><br>
-
-  <label>Price</label>
-  <br>
-
-  <input
-    type="number"
-    [(ngModel)]="selectedProduct.price">
-
-  <br><br>
-
-  <label>Stock</label>
-  <br>
-
-  <input
-    type="number"
-    min="1"
-    [(ngModel)]="selectedProduct.stockQuantity">
-
-  <br><br>
-<label>Category</label>
-<br>
-
-<select
-  [(ngModel)]="selectedProduct.categoryId">
-
-  <option
-    *ngFor="let category of categories"
-    [value]="category.id">
-
-    {{ category.name }}
-
-  </option>
-
-</select>
-
-<br><br>
-<label>Product Image</label>
-<br>
-
-<input
-  type="file"
-  (change)="onEditFileSelected($event)">
-
-<br><br>
-  <button
-    (click)="updateProduct()">
-    Save Changes
-  </button>
+  </p>
 
 </div>

@@ -1,0 +1,208 @@
+<h2 mat-dialog-title>
+
+  {{ isEditMode ? 'Edit Product' : 'Add Product' }}
+
+</h2>
+
+<mat-dialog-content>
+
+<form
+  [formGroup]="productForm">
+
+  @if(isEditMode)
+{
+
+<label>
+
+Current Image
+
+</label>
+
+<br>
+
+<img
+  [src]="'https://localhost:7113/images/' + currentImage"
+  class="preview-image">
+
+<br><br>
+
+}
+
+<label>
+
+Choose New Image (Optional)
+
+</label>
+
+<input
+  type="text"
+  formControlName="name">
+
+@if(productForm.get('name')?.touched &&
+    productForm.get('name')?.hasError('required'))
+{
+  <small style="color:red">
+
+    Product name is required
+
+  </small>
+}
+
+<br><br>
+
+<label>
+
+  Description
+
+</label>
+
+<textarea
+  rows="4"
+  formControlName="description">
+
+</textarea>
+
+@if(productForm.get('description')?.touched &&
+    productForm.get('description')?.hasError('required'))
+{
+  <small style="color:red">
+
+    Description is required
+
+  </small>
+}
+
+<br><br>
+
+<label>
+
+  Price
+
+</label>
+
+<input
+  type="number"
+  formControlName="price">
+
+@if(productForm.get('price')?.touched &&
+    productForm.get('price')?.hasError('required'))
+{
+  <small style="color:red">
+
+    Price is required
+
+  </small>
+}
+
+<br><br>
+
+<label>
+
+  Stock Quantity
+
+</label>
+
+<input
+  type="number"
+  min="1"
+  formControlName="stockQuantity">
+
+@if(productForm.get('stockQuantity')?.touched &&
+    productForm.get('stockQuantity')?.hasError('required'))
+{
+  <small style="color:red">
+
+    Stock is required
+
+  </small>
+}
+
+<br><br>
+
+<label>
+
+  Category
+
+</label>
+
+<select
+  formControlName="categoryId">
+
+<option value="">
+
+Select Category
+
+</option>
+
+<option
+  *ngFor="let category of categories"
+  [value]="category.id">
+
+{{ category.name }}
+
+</option>
+
+</select>
+
+@if(productForm.get('categoryId')?.touched &&
+    productForm.get('categoryId')?.hasError('required'))
+{
+  <small style="color:red">
+
+    Please select a category
+
+  </small>
+}
+
+<br><br>
+
+<label>
+
+Product Image
+
+</label>
+
+<input
+  type="file"
+  (change)="onFileSelected($event)">
+
+@if(selectedImage)
+{
+<p>
+
+Selected:
+<strong>
+
+{{ selectedImage.name }}
+
+</strong>
+
+</p>
+}
+
+</form>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+
+<button
+  mat-button
+  type="button"
+  (click)="closeDialog()">
+
+Cancel
+
+</button>
+
+<button
+  mat-raised-button
+  color="primary"
+  type="button"
+  (click)="saveProduct()">
+
+{{ isEditMode ? 'Update Product' : 'Save Product' }}
+
+</button>
+
+</mat-dialog-actions>

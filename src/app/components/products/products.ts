@@ -9,6 +9,17 @@ import {
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { NotificationService } from '../../services/notification';
+import { MatDialog } from '@angular/material/dialog';
+import { Subject } from 'rxjs';
+
+import {
+  debounceTime,
+  distinctUntilChanged,
+  switchMap
+} from 'rxjs/operators';
+import { ConfirmationDialogComponent }
+from '../confirmation-dialog/confirmation-dialog';
 @Component({
   selector: 'app-products',
   standalone: true,
@@ -32,13 +43,14 @@ allProducts: any[] = [];
 minPrice = 0;
 maxPrice = 99999999;
 
-
+private searchSubject = new Subject<string>();
 
 
  constructor(
   private productService: ProductService,
   private cartService: CartService,
-  private cdr: ChangeDetectorRef
+  private cdr: ChangeDetectorRef, private notification: NotificationService,
+    private dialog: MatDialog
 ) {}
 
 ngOnInit(): void {
@@ -63,7 +75,47 @@ ngOnInit(): void {
       }
     });
 
+this.searchSubject
 
+.pipe(
+
+  debounceTime(500),
+
+  distinctUntilChanged(),
+
+  switchMap(searchText =>
+
+    this.productService.searchProducts(searchText)
+
+  )
+
+)
+
+.subscribe({
+
+  next: (response: any) =>
+  {
+
+    this.products = response;
+
+    this.suggestions = response;
+
+    this.cdr.detectChanges();
+
+  },
+
+  error: error =>
+  {
+
+    console.log(error);
+
+    this.notification.error(
+      'Search failed.'
+    );
+
+  }
+
+});
     
 }
 loadCategories()
@@ -98,6 +150,7 @@ loadProducts()
         console.log(error);
       });
 }
+
 
 activePriceFilter = 'All Prices';
 setPriceRange(
@@ -150,30 +203,22 @@ filterByCategory(categoryId: string)
 }
 searchProducts()
 {
-  if (!this.searchText.trim())
+
+  if(!this.searchText.trim())
   {
+
     this.loadProducts();
 
     this.suggestions = [];
 
     return;
+
   }
 
-  this.productService
-    .searchProducts(this.searchText)
-    .subscribe(
-      (response: any) =>
-      {
-        this.products = response;
+  this.searchSubject.next(
+    this.searchText
+  );
 
-        this.suggestions = response;
-
-        this.cdr.detectChanges();
-      },
-      (error) =>
-      {
-        console.log(error);
-      });
 }
 selectProduct(product: any)
 {
@@ -194,11 +239,43 @@ checkProducts() {
 
 logout()
 {
-  localStorage.removeItem('token');
 
-  location.href = '/login';
+  const dialogRef = this.dialog.open(
+    ConfirmationDialogComponent,
+    {
+
+      width: '350px',
+
+      data:
+      {
+        title: 'Logout',
+
+        message: 'Are you sure you want to logout?'
+      }
+
+    });
+
+  dialogRef.afterClosed()
+    .subscribe(result =>
+    {
+
+      if(result)
+      {
+
+        localStorage.removeItem('token');
+
+        this.notification.success(
+          'Logged out successfully.'
+        );
+
+        location.href = '/login';
+
+      }
+
+    });
+
 }
-  addToCart(productId: string)
+ addToCart(productId: string)
 {
   const data =
   {
@@ -206,18 +283,28 @@ logout()
     quantity: 1
   };
 
-  this.cartService.addToCart(data)
-    .subscribe(
-      () =>
+  this.cartService
+    .addToCart(data)
+    .subscribe({
+
+      next: () =>
       {
-        alert('Product added to cart');
+        this.notification.success(
+          'Product added to cart.'
+        );
       },
-      (error) =>
+
+      error: (error) =>
       {
         console.log(error);
 
-        alert('Failed to add product');
-      });
+        this.notification.error(
+          'Failed to add product.'
+        );
+      }
+
+    });
+
 }
 
 get productCount() {

@@ -3,6 +3,10 @@ import { CommonModule } from '@angular/common';
 import { CartService } from '../../services/cart';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
+import { NotificationService } from '../../services/notification';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog';
+
 @Component({
   selector: 'app-cart',
   standalone: true,
@@ -23,7 +27,9 @@ export class CartComponent implements OnInit {
 
   constructor(private router: Router,
     private cartService: CartService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+     private notification: NotificationService,
+       private dialog: MatDialog
   ) {
   }
 
@@ -72,7 +78,7 @@ goToOrders() {
       .subscribe(
         (response: any) =>
         {
-          alert(response);
+          this.notification.success(response);
 
           this.items = [];
 
@@ -84,7 +90,9 @@ goToOrders() {
         {
           console.log(error);
 
-          alert('Checkout failed');
+          this.notification.error(
+  'Checkout failed'
+);
         });
   }
   increaseQuantity(item: any)
@@ -104,6 +112,9 @@ goToOrders() {
       () =>
       {
         this.ngOnInit();
+        this.notification.success(
+  'Quantity Updated'
+);
       },
       (error) =>
       {
@@ -132,6 +143,9 @@ decreaseQuantity(item: any)
       () =>
       {
         this.ngOnInit();
+        this.notification.success(
+  'Quantity Updated'
+);
       },
       (error) =>
       {
@@ -140,17 +154,58 @@ decreaseQuantity(item: any)
 }
 removeItem(item: any)
 {
-  this.cartService
-    .removeCartItem(
-      item.cartItemId)
-    .subscribe(
-      () =>
+
+  const dialogRef = this.dialog.open(
+    ConfirmationDialogComponent,
+    {
+      width: '350px',
+
+      data:
       {
-        this.ngOnInit();
-      },
-      (error) =>
+        title: 'Remove Item',
+
+        message: 'Remove this item from your cart?'
+      }
+    });
+
+  dialogRef.afterClosed()
+    .subscribe(result =>
+    {
+
+      if(result)
       {
-        console.log(error);
-      });
+
+        this.cartService
+          .removeCartItem(item.cartItemId)
+          .subscribe({
+
+            next: () =>
+            {
+
+              this.notification.success(
+                'Item removed from cart'
+              );
+
+              this.ngOnInit();
+
+            },
+
+            error: error =>
+            {
+
+              console.log(error);
+
+              this.notification.error(
+                'Failed to remove item'
+              );
+
+            }
+
+          });
+
+      }
+
+    });
+
 }
 }

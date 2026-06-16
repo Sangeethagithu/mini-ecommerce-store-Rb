@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef } from '@angular/core';
 import { ProductService } from '../../services/product';
 import { CartService } from '../../services/cart';
-
+import { NotificationService } from '../../services/notification';
 @Component({
   selector: 'app-product-details',
   standalone: true,
@@ -21,7 +21,7 @@ implements OnInit {
     private route: ActivatedRoute,
     private productService: ProductService,
     private cartService: CartService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef, private notification: NotificationService
   )
   {
   }
@@ -48,23 +48,34 @@ implements OnInit {
   }
 
   addToCart()
+{
+  const data =
   {
-    const data =
-    {
-      productId: this.product.id,
-      quantity: 1
-    };
+    productId: this.product.id,
+    quantity: 1
+  };
 
-    this.cartService
-      .addToCart(data)
-      .subscribe(
-        () =>
-        {
-          alert('Added to cart');
-        },
-        (error:any) =>
-        {
-          console.log(error);
-        });
-  }
+  this.cartService
+    .addToCart(data)
+    .subscribe({
+
+      next: () =>
+      {
+        this.notification.success(
+          'Product added to cart.'
+        );
+      },
+
+      error: (error: any) =>
+      {
+        console.log(error);
+
+        this.notification.error(
+          'Failed to add product.'
+        );
+      }
+
+    });
+
+}
 }

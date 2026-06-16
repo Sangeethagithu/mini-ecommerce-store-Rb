@@ -29,53 +29,51 @@ recentOrders: any[] = [];
   ) {
   }
 
-  ngOnInit(): void
-  {
-    this.cartService
-      .getDashboardStats()
-      .subscribe(
-        (response: any) =>
-        {
-          console.log(response);
+  
+   ngOnInit(): void
+{
+  this.loadDashboardData();
+}
+  
+  loadDashboardData()
+{
+  this.cartService
+    .getDashboardStats()
+    .subscribe(
+      (response: any) =>
+      {
+        this.dashboard = response;
+        this.cdr.detectChanges();
+      },
+      error =>
+      {
+        console.log(error);
+      });
 
-          this.dashboard = response;
+  this.productService
+    .getLowStockProducts()
+    .subscribe(
+      (response: any) =>
+      {
+        this.lowStockProducts = response;
+        this.cdr.detectChanges();
+      },
+      error =>
+      {
+        console.log(error);
+      });
 
-          this.cdr.detectChanges();
-        },
-        (error) =>
-        {
-          console.log(error);
-        });
-
-
-    this.productService
-  .getLowStockProducts()
-  .subscribe(
-    (response: any) =>
-    {
-      this.lowStockProducts = response;
-
-      this.cdr.detectChanges();
-    },
-    (error) =>
-    {
-      console.log(error);
-    });
-
-
-    this.cartService
-  .getRecentOrders()
-  .subscribe(
-    (response: any) =>
-    {
-      this.recentOrders =
-        response;
-
-      this.cdr.detectChanges();
-    },
-    (error) =>
-    {
-      console.log(error);
-    });
-  }
+  this.cartService
+    .getRecentOrders()
+    .subscribe(
+      (response: any) =>
+      {
+        this.recentOrders = response;
+        this.cdr.detectChanges();
+      },
+      error =>
+      {
+        console.log(error);
+      });
+}
 }

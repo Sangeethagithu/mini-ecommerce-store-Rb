@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CartService } from '../../services/cart';
 import { ChangeDetectorRef } from '@angular/core';
-
+import { NotificationService } from '../../services/notification';
 @Component({
   selector: 'app-admin-orders',
   standalone: true,
@@ -25,7 +25,7 @@ deliveredOrders = 0;
 cancelledOrders = 0;
   constructor(
     private cartService: CartService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,private notification: NotificationService
   ) {
   }
 
@@ -91,7 +91,7 @@ this.cdr.detectChanges();
       .subscribe(
         (response) =>
         {
-          alert(response);
+          this.notification.success(response);
 
           this.loadOrders();
 
@@ -101,7 +101,9 @@ this.cdr.detectChanges();
         {
           console.log(error);
 
-          alert('Update failed');
+          this.notification.error(
+'Update failed'
+);
         });
   }
 }

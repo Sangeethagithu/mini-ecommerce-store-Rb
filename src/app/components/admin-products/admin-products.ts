@@ -1,256 +1,202 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ProductService } from '../../services/product';
-import { ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ChangeDetectorRef } from '@angular/core';
+
+import { MatDialog } from '@angular/material/dialog';
+
+import { ProductService } from '../../services/product';
+import { NotificationService } from '../../services/notification';
+
+import { AddEditProductDialogComponent }
+from '../add-edit-product-dialog/add-edit-product-dialog';
+
 @Component({
   selector: 'app-admin-products',
   standalone: true,
-  imports: [CommonModule,  FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule
+  ],
   templateUrl: './admin-products.html',
-  styleUrl: './admin-products.css',
-  
+  styleUrl: './admin-products.css'
 })
 export class AdminProductsComponent
-implements OnInit
-{
+implements OnInit {
+
   products: any[] = [];
+
   categories: any[] = [];
-  selectedImage: File | null = null;
+
   searchText = '';
+
   suggestions: any[] = [];
 
   constructor(
-    private productService: ProductService,  private cdr: ChangeDetectorRef
-  )
-  {
+    private productService: ProductService,
+    private notification: NotificationService,
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+  ngOnInit(): void {
+
+    this.loadProducts();
+
+    this.loadCategories();
+
   }
 
-  newProduct =
-{
-  name: '',
-  description: '',
-  price: 0,
-  stockQuantity: 0,
-  categoryId: '',
-    image: null as File | null
-
-};
-
-showAddForm = false;
-
-  ngOnInit(): void
-  {
-    this.loadProducts(); this.loadCategories();
-  }
-loadCategories()
-{
-  this.productService
-      .getCategories()
-      .subscribe(
-      (response:any) =>
-      {
-          this.categories = response;
-      },
-      error =>
-      {
-          console.log(error);
-      });
-}
   loadProducts()
   {
     this.productService
       .getProducts()
-      .subscribe(
-        (response: any) =>
+      .subscribe({
+
+        next: (response: any) =>
         {
           this.products = response;
-      this.cdr.detectChanges();
+
+          this.cdr.detectChanges();
         },
-        (error) =>
+
+        error: (error) =>
         {
           console.log(error);
-        });
 
-      }
-      onEditFileSelected(event: any)
-{
-  this.selectedImage =
-    event.target.files[0];
-}
-searchProducts()
-{
-  if (!this.searchText.trim())
-  {
-    this.loadProducts();
+          this.notification.error(
+            'Failed to load products'
+          );
+        }
 
-    this.suggestions = [];
-
-    return;
+      });
   }
 
-  this.productService
+  loadCategories()
+  {
+    this.productService
+      .getCategories()
+      .subscribe({
+
+        next: (response: any) =>
+        {
+          this.categories = response;
+        },
+
+        error: (error) =>
+        {
+          console.log(error);
+
+          this.notification.error(
+            'Failed to load categories'
+          );
+        }
+
+      });
+  }
+
+  searchProducts()
+  {
+    if (!this.searchText.trim())
+    {
+      this.loadProducts();
+
+      this.suggestions = [];
+
+      return;
+    }
+
+    this.productService
       .searchProducts(this.searchText)
-      .subscribe(
-      (response: any) =>
-      {
+      .subscribe({
+
+        next: (response: any) =>
+        {
           this.products = response;
 
           this.suggestions = response;
-      },
-      error =>
-      {
+
+          this.cdr.detectChanges();
+        },
+
+        error: (error) =>
+        {
           console.log(error);
+        }
+
       });
-}
-
-selectProduct(product: any)
-{
-  this.searchText = product.name;
-
-  this.suggestions = [];
-
-  this.products = [product];
-}
-addProduct()
-{
-  this.showAddForm = true;
-}
-
-onFileSelected(event: any)
-{
-  this.newProduct.image =
-    event.target.files[0];
-}
-
-saveProduct()
-{
-
-  if (this.newProduct.stockQuantity < 1) {
-  alert('Stock quantity must be at least 1');
-  return;
-}
-  if (!this.newProduct.categoryId) {
-    alert('Please select a category');
-    return;
   }
 
-  const formData =
-    new FormData();
-
-  formData.append(
-    'name',
-    this.newProduct.name);
-
-  formData.append(
-    'description',
-    this.newProduct.description);
-
-  formData.append(
-    'price',
-    this.newProduct.price.toString());
-
-  formData.append(
-    'stockQuantity',
-    this.newProduct.stockQuantity.toString());
-
-  formData.append(
-    'categoryId',
-    this.newProduct.categoryId);
-
- if (this.newProduct.image) {
-  formData.append(
-    'image',
-    this.newProduct.image
-  );
-}
-
-  this.productService
-    .addProduct(formData)
-    .subscribe(
-      () =>
-      {
-        alert('Product Added');
-
-        this.showAddForm = false;
-
-        this.loadProducts();
-      },
-      error =>
-      {
-        console.log(error);
-      });
-}
-selectedProduct: any = null;
-
-editProduct(product: any)
-{
-  this.selectedProduct =
+  selectProduct(product: any)
   {
-    ...product
-  };
-}
+    this.searchText = product.name;
 
-updateProduct()
-{
-  if (this.selectedProduct.stockQuantity < 1)
-  {
-    alert('Stock quantity must be at least 1');
-    return;
+    this.suggestions = [];
+
+    this.products = [product];
   }
 
-  const formData =
-    new FormData();
-
-  formData.append(
-    'name',
-    this.selectedProduct.name);
-
-  formData.append(
-    'description',
-    this.selectedProduct.description);
-
-  formData.append(
-    'price',
-    this.selectedProduct.price.toString());
-
-  formData.append(
-    'stockQuantity',
-    this.selectedProduct.stockQuantity.toString());
-
-  formData.append(
-    'categoryId',
-    this.selectedProduct.categoryId);
-
-  if (this.selectedImage)
+  addProduct()
   {
-    formData.append(
-      'image',
-      this.selectedImage);
+    const dialogRef =
+      this.dialog.open(
+        AddEditProductDialogComponent,
+        {
+          width: '700px',
+
+          disableClose: true,
+
+          data:
+          {
+            mode: 'add',
+
+            categories: this.categories
+          }
+        });
+
+    dialogRef.afterClosed()
+      .subscribe(result =>
+      {
+        if(result)
+        {
+          this.loadProducts();
+        }
+      });
   }
 
-  this.productService
-    .updateProduct(
-      this.selectedProduct.id,
-      formData
-    )
-    .subscribe(
-      () =>
-      {
-        alert('Product Updated');
+  editProduct(product: any)
+  {
+    const dialogRef =
+      this.dialog.open(
+        AddEditProductDialogComponent,
+        {
+          width: '700px',
 
-        this.selectedProduct = null;
+          disableClose: true,
 
-        this.loadProducts();
-      },
-      error =>
+          data:
+          {
+            mode: 'edit',
+
+            product: product,
+
+            categories: this.categories
+          }
+        });
+
+    dialogRef.afterClosed()
+      .subscribe(result =>
       {
-        console.log(error);
+        if(result)
+        {
+          this.loadProducts();
+        }
       });
-}
+  }
+
   deleteProduct(id: string)
   {
-    if (!confirm(
+    if(!confirm(
       'Delete this product?'))
     {
       return;
@@ -258,17 +204,27 @@ updateProduct()
 
     this.productService
       .deleteProduct(id)
-      .subscribe(
-        () =>
+      .subscribe({
+
+        next: () =>
         {
-          alert(
-            'Product deleted');
+          this.notification.success(
+            'Product Deleted Successfully'
+          );
 
           this.loadProducts();
         },
-        (error) =>
+
+        error: (error) =>
         {
           console.log(error);
-        });
+
+          this.notification.error(
+            'Failed to delete product'
+          );
+        }
+
+      });
   }
+
 }

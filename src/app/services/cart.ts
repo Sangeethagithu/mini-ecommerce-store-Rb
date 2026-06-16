@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -12,214 +12,102 @@ export class CartService {
   }
 updateOrderStatus(data: any)
 {
-  const token =
-    localStorage.getItem('token');
+  
 
-  const headers =
-    new HttpHeaders({
-      Authorization:
-        `Bearer ${token}`
-    });
-
-  return this.http.put(
-    'https://localhost:7113/api/Orders/status',
-    data,
-    {
-      headers,
-      responseType: 'text'
-    });
+ return this.http.put(
+  'https://localhost:7113/api/Orders/status',
+  data,
+  {
+    responseType: 'text'
+  }
+);
 }
   addToCart(data: any)
   {
-    const token =
-      localStorage.getItem('token');
+    
 
-    const headers =
-      new HttpHeaders({
-        Authorization:
-          `Bearer ${token}`
-      });
-
-    return this.http.post(
-      'https://localhost:7113/api/cart/add',
-      data,
-      { headers,
-         responseType: 'text'
-       }
-    );
+   return this.http.post(
+  'https://localhost:7113/api/cart/add',
+  data,
+  {
+    responseType: 'text'
+  }
+);
   }
   getCartItems()
 {
-  const token =
-    localStorage.getItem('token');
-
-  const headers =
-    new HttpHeaders({
-      Authorization:
-        `Bearer ${token}`
-    });
-
   return this.http.get(
-    'https://localhost:7113/api/cart',
-    { headers }
-  );
+  'https://localhost:7113/api/cart'
+);
 }
 getCartTotal()
 {
-  const token =
-    localStorage.getItem('token');
-
-  const headers =
-    new HttpHeaders({
-      Authorization:
-        `Bearer ${token}`
-    });
-
   return this.http.get(
-    'https://localhost:7113/api/cart/total',
-    { headers }
-  );
+  'https://localhost:7113/api/cart/total'
+);
 }
 checkout()
 {
-  const token =
-    localStorage.getItem('token');
-
-  const headers =
-    new HttpHeaders({
-      Authorization:
-        `Bearer ${token}`
-    });
-
   return this.http.post(
-    'https://localhost:7113/api/Orders/checkout',
-    {},
-    {
-      headers,
-      responseType: 'text'
-    });
+  'https://localhost:7113/api/Orders/checkout',
+  {},
+  {
+    responseType: 'text'
+  }
+);
 }
 getOrders()
 {
-  const token =
-    localStorage.getItem('token');
-
-  const headers =
-    new HttpHeaders({
-      Authorization:
-        `Bearer ${token}`
-    });
-
   return this.http.get(
-    'https://localhost:7113/api/Orders',
-    { headers }
-  );
+  'https://localhost:7113/api/Orders'
+);
 }
 getOrderDetails(orderId: string)
 {
-  const token =
-    localStorage.getItem('token');
-
-  const headers =
-    new HttpHeaders({
-      Authorization:
-        `Bearer ${token}`
-    });
-
-  return this.http.get(
-    `https://localhost:7113/api/Orders/${orderId}`,
-    { headers }
-  );
+ return this.http.get(
+  `https://localhost:7113/api/Orders/${orderId}`
+);
 }
 getAllOrdersForAdmin()
 {
-  const token =
-    localStorage.getItem('token');
-
-  console.log('ADMIN TOKEN:', token);
-
-  const headers =
-    new HttpHeaders({
-      Authorization:
-        `Bearer ${token}`
-    });
-
-  return this.http.get(
-    'https://localhost:7113/api/Orders/admin',
-    { headers }
-  );
+return this.http.get(
+  'https://localhost:7113/api/Orders/admin'
+);
 }
 //dashboard admin
 getDashboardStats()
 {
-  const token =
-    localStorage.getItem('token');
-
-  const headers =
-    new HttpHeaders({
-      Authorization:
-        `Bearer ${token}`
-    });
-
   return this.http.get(
-    'https://localhost:7113/api/Orders/dashboard',
-    { headers }
-  );
+  'https://localhost:7113/api/Orders/dashboard'
+);
+    
 }
 //recent prod
 getRecentOrders()
 {
-  const token =
-    localStorage.getItem('token');
-
-  const headers =
-    new HttpHeaders({
-      Authorization:
-        `Bearer ${token}`
-    });
-
   return this.http.get(
-    'https://localhost:7113/api/Orders/recent-orders',
-    { headers }
-  );
+  'https://localhost:7113/api/Orders/recent-orders'
+);
 }
 //update quantity
 updateCartQuantity(data: any)
 {
-  const token =
-    localStorage.getItem('token');
-
-  const headers =
-    new HttpHeaders({
-      Authorization:
-        `Bearer ${token}`
-    });
-
   return this.http.put(
-    'https://localhost:7113/api/Cart/update',
-    data,
-    {
-      headers,
-      responseType: 'text'
-    });
+  'https://localhost:7113/api/Cart/update',
+  data,
+  {
+    responseType: 'text'
+  }
+);
 }
 
 removeCartItem(cartItemId: string)
 {
-  const token =
-    localStorage.getItem('token');
-
-  const headers =
-    new HttpHeaders({
-      Authorization:
-        `Bearer ${token}`
-    });
-
-  return this.http.delete(
-    `https://localhost:7113/api/Cart/${cartItemId}`,
-    {
-      headers,
-      responseType: 'text'
-    });
+return this.http.delete(
+  `https://localhost:7113/api/Cart/${cartItemId}`,
+  {
+    responseType: 'text'
+  }
+);
 }
 }
