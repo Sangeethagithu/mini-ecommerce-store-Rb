@@ -62,6 +62,7 @@ namespace Amazon.API.Repositories
             return products;
         }
 
+
         //POST operation
         public void AddProduct(CreateProductDto dto)
         {
@@ -72,7 +73,32 @@ namespace Amazon.API.Repositories
     Guid.NewGuid().ToString() +
     Path.GetExtension(
         dto.Image.FileName);
+           
 
+            SqlConnection connection =
+                new SqlConnection(connectionString);
+
+            SqlCommand checkCommand =
+                new SqlCommand(
+                    "SELECT COUNT(*) FROM Products WHERE Name = @Name",
+                    connection);
+
+            checkCommand.Parameters.AddWithValue(
+                "@Name",
+                dto.Name);
+
+            connection.Open();
+
+            int count =
+                (int)checkCommand.ExecuteScalar();
+
+            connection.Close();
+
+            if (count > 0)
+            {
+                throw new Exception(
+                    "A product with this name already exists.");
+            }
             string imagePath =
                 Path.Combine(
                     environment.ContentRootPath,
@@ -88,10 +114,7 @@ namespace Amazon.API.Repositories
             }
 
 
-            SqlConnection connection =
-                new SqlConnection(connectionString);
-
-
+           
 
 
 
