@@ -12,7 +12,8 @@ import { FormsModule } from '@angular/forms';
 import { NotificationService } from '../../services/notification';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
-
+import { ProductCardComponent }
+from '../product-card/product-card';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -25,7 +26,7 @@ from '../confirmation-dialog/confirmation-dialog';
   standalone: true,
    imports: [
     CommonModule,
-    RouterModule, FormsModule
+    RouterModule, FormsModule, ProductCardComponent
   ],
   templateUrl: './products.html',
   styleUrl: './products.css'
@@ -132,6 +133,19 @@ loadCategories()
       {
         console.log(error);
       });
+}
+onSearch(text: string)
+{
+  this.searchText = text;
+
+  this.searchProducts();
+}
+
+onClear()
+{
+  this.searchText = '';
+
+  this.loadProducts();
 }
 loadProducts()
 {

@@ -1,0 +1,44 @@
+.product-card
+{
+    border: 1px solid #ddd;
+
+    border-radius: 10px;
+
+    padding: 15px;
+
+    text-align: center;
+
+    background: white;
+}
+
+.product-image
+{
+    width: 180px;
+
+    height: 180px;
+
+    object-fit: contain;
+}
+
+.price
+{
+    font-size: 18px;
+
+    font-weight: bold;
+
+    color: green;
+}
+
+.cart-btn
+{
+    width: 100%;
+
+    padding: 10px;
+
+    cursor: pointer;
+}
+
+.description
+{
+    min-height: 50px;
+}

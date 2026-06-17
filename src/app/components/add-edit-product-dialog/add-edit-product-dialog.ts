@@ -210,13 +210,11 @@ implements OnInit {
 
         error: (error) =>
         {
+  console.log(error);
 
-          console.log(error);
-
-          this.notification.error(
-            'Failed to update product'
-          );
-
+  this.notification.error(
+    error.error || 'Failed to add product.'
+  );
         }
 
       });
@@ -245,10 +243,11 @@ implements OnInit {
 
           console.log(error);
 
-          this.notification.error(
-            'Failed to add product'
-          );
+           console.log(error);
 
+  this.notification.error(
+    error.error || 'Failed to add product.'
+  );
         }
 
       });
