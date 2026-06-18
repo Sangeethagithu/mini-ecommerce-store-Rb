@@ -1,47 +1,62 @@
 <div class="product-card">
 
-  <img
-    [src]="'https://localhost:7113/images/' + product.imageUrl"
-    class="product-image">
+    <div class="image-container">
 
-  <h3>
+        <img
+            [src]="'https://localhost:7113/images/' + product.imageUrl"
+            class="product-image"
+            [alt]="product.name">
 
-    <a
-      [routerLink]="[
-        '/product-details',
-        product.id
-      ]">
+    </div>
 
-      {{ product.name }}
+    <div class="category-badge">
 
-    </a>
+        {{ product.categoryName || 'Product' }}
 
-  </h3>
+    </div>
 
-  <p class="description">
+    <h3>
 
-    {{ product.description }}
+        <a
+            [routerLink]="['/product-details', product.id]">
 
-  </p>
+            {{ product.name }}
 
-  <p class="price">
+        </a>
 
-    ₹{{ product.price }}
+    </h3>
 
-  </p>
+    <p class="description">
 
-  <p>
+        {{ product.description }}
 
-    Stock:
-    {{ product.stockQuantity }}
+    </p>
 
-  </p>
+    <div class="price">
 
- <button
-  class="cart-btn"
-  (click)="onAddToCart()">
+        ₹{{ product.price | number }}
 
-  Add To Cart
+    </div>
 
-</button>
+    <div class="stock">
+
+        <span
+            [class.low-stock]="product.stockQuantity < 10">
+
+            ●
+
+        </span>
+
+        {{ product.stockQuantity }} Available
+
+    </div>
+
+    <button
+        class="cart-btn"
+        (click)="onAddToCart()">
+
+        🛒 Add To Cart
+
+    </button>
+
 </div>

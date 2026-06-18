@@ -1,30 +1,87 @@
-<div *ngIf="product">
+<div class="product-page" *ngIf="product">
 
-  <h1>
-    {{ product.name }}
-  </h1>
+    <div class="breadcrumb">
 
-<img
-  [src]="'https://localhost:7113/images/' + product.imageUrl"
-  width="300"
-  onerror="this.src='https://via.placeholder.com/300'">
+        Home /
 
-  <h2>
-    ₹{{ product.price }}
-  </h2>
+        Products /
 
-  <p>
-    {{ product.description }}
-  </p>
+        {{product.name}}
 
-  <p>
-    Stock:
-    {{ product.stockQuantity }}
-  </p>
+    </div>
 
-  <button
-    (click)="addToCart()">
-    Add To Cart
-  </button>
+    <div class="product-container">
+
+        <div class="image-section">
+
+            <img
+
+                [src]="'https://localhost:7113/images/' + product.imageUrl"
+
+                onerror="this.src='https://via.placeholder.com/450'">
+
+        </div>
+
+        <div class="details-section">
+
+            <h1>
+
+                {{product.name}}
+
+            </h1>
+
+            <p class="description">
+
+                {{product.description}}
+
+            </p>
+
+            <div class="price">
+
+                ₹{{product.price | number}}
+
+            </div>
+
+            <div
+                class="stock"
+                [class.low-stock]="product.stockQuantity<10">
+
+                <span>
+
+                    In Stock
+
+                </span>
+
+                ({{product.stockQuantity}} Available)
+
+            </div>
+
+            <hr>
+
+            <div class="features">
+
+                <p>✔ Genuine Product</p>
+
+                <p>✔ Secure Payment</p>
+
+                <p>✔ Fast Delivery</p>
+
+                <p>✔ Easy Returns</p>
+
+            </div>
+
+            <button
+
+                class="cart-btn"
+
+                (click)="addToCart()">
+
+                🛒 Add To Cart
+
+            </button>
+
+        </div>
+
+    </div>
 
 </div>
