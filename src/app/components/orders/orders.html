@@ -1,112 +1,92 @@
-<h1>My Orders</h1>
+<div class="orders-page">
 
-<div
-  class="order-card"
-  *ngFor="let order of orders">
+    <div class="page-header">
 
-  <div class="order-header">
+        <h1>My Orders</h1>
 
-    <div>
-
-      <p class="label">
-        ORDER
-      </p>
-
-      <p>
-        #{{ order.id.slice(-4) }}
-      </p>
+        <p>
+            Track and view all your purchases.
+        </p>
 
     </div>
 
-    <div>
+    <div
+        class="order-card"
+        *ngFor="let order of orders">
 
-      <p class="label">
-        DATE
-      </p>
+        <div class="order-top">
 
-      <p>
-        {{ order.orderDate | date:'dd MMM yyyy' }}
-      </p>
+            <div class="info-box">
+
+                <span class="label">
+                    ORDER ID
+                </span>
+
+                <span class="value">
+                    #{{order.id.slice(-4)}}
+                </span>
+
+            </div>
+
+            <div class="info-box">
+
+                <span class="label">
+                    ORDER DATE
+                </span>
+
+                <span class="value">
+                    {{order.orderDate | date:'dd MMM yyyy'}}
+                </span>
+
+            </div>
+
+            <div class="info-box">
+
+                <span class="label">
+                    TOTAL
+                </span>
+
+                <span class="value price">
+                    ₹{{order.totalAmount | number}}
+                </span>
+
+            </div>
+
+            <div class="info-box">
+
+                <span class="label">
+                    STATUS
+                </span>
+
+                <span
+                    class="status-badge"
+                    [ngClass]="{
+                    'pending':order.status==='Pending',
+                    'processing':order.status==='Processing',
+                    'delivered':order.status==='Delivered',
+                    'cancelled':order.status==='Cancelled'
+                }">
+
+                    {{order.status}}
+
+                </span>
+
+            </div>
+
+        </div>
+
+        <div class="order-footer">
+
+            <button
+                class="details-btn"
+                (click)="viewDetails(order.id)">
+
+                View Details →
+
+            </button>
+
+        </div>
 
     </div>
-
-    <div>
-
-      <p class="label">
-        TOTAL
-      </p>
-
-      <p>
-        ₹{{ order.totalAmount }}
-      </p>
-
-    </div>
-
-    <div>
-
-      <p class="label">
-        STATUS
-      </p>
-
-      <p
-        [ngClass]="{
-          'pending': order.status === 'Pending',
-          'processing': order.status === 'Processing',
-          'delivered': order.status === 'Delivered',
-          'cancelled': order.status === 'Cancelled'
-        }">
-
-        {{ order.status }}
-
-      </p>
-
-    </div>
-
-  </div>
-
-  <button
-    class="details-btn"
-    (click)="viewDetails(order.id)">
-
-    View Details
-
-  </button>
-
-</div>
-
-<hr>
-
-<div *ngIf="selectedOrderItems.length > 0">
-
-  <h2>
-    Order Details
-  </h2>
-
-  <div
-    class="detail-card"
-    *ngFor="let item of selectedOrderItems">
-
-    <h3>
-      {{ item.productName }}
-    </h3>
-
-    <p>
-      Price:
-      ₹{{ item.price }}
-    </p>
-
-    <p>
-      Quantity:
-      {{ item.quantity }}
-    </p>
-
-    <p class="subtotal">
-
-      Subtotal:
-      ₹{{ item.price * item.quantity }}
-
-    </p>
-
-  </div>
 
 </div>

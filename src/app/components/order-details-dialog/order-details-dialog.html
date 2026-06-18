@@ -1,0 +1,56 @@
+<h2 class="dialog-title">Order Details</h2>
+
+<hr>
+
+<div
+    class="products-container"
+
+  *ngIf="orderItems.length > 0; else noItems">
+
+  <div
+    class="detail-card"
+    *ngFor="let item of orderItems">
+
+    <h3>
+      {{ item.productName }}
+    </h3>
+
+    <p>
+      Price:
+      ₹{{ item.price }}
+    </p>
+
+    <p>
+      Quantity:
+      {{ item.quantity }}
+    </p>
+
+    <p class="subtotal">
+      Subtotal:
+      ₹{{ item.price * item.quantity }}
+    </p>
+
+    <hr>
+
+  </div>
+
+</div>
+
+<ng-template #noItems>
+
+  <p>
+    No products found for this order.
+  </p>
+
+</ng-template>
+<div class="dialog-footer">
+
+    <button
+        class="close-btn"
+        (click)="closeDialog()">
+
+        Close
+
+    </button>
+
+</div>

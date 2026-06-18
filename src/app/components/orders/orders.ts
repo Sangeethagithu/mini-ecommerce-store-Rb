@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../services/cart';
 import { ChangeDetectorRef } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 
+import { OrderDetailsDialogComponent }
+from '../order-details-dialog/order-details-dialog';
 @Component({
   selector: 'app-orders',
   standalone: true,
@@ -14,11 +17,12 @@ export class OrdersComponent implements OnInit {
 
   orders: any[] = [];
 
-  selectedOrderItems: any[] = [];
+  
 
   constructor(
     private cartService: CartService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+     private dialog: MatDialog
   ) {
   }
 
@@ -40,21 +44,17 @@ export class OrdersComponent implements OnInit {
         });
   }
 
-  viewDetails(orderId: string)
-  {
-    this.cartService.getOrderDetails(orderId)
-      .subscribe(
-        (response: any) =>
-        {
-          console.log(response);
+ viewDetails(orderId: string)
+{
+    this.dialog.open(
+      OrderDetailsDialogComponent,
+      {
+        width: '700px',
 
-          this.selectedOrderItems = response;
-
-          this.cdr.detectChanges();
-        },
-        (error) =>
+        data:
         {
-          console.log(error);
-        });
-  }
+          orderId: orderId
+        }
+      });
+}
 }
