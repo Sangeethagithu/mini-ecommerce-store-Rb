@@ -1,56 +1,71 @@
-.navbar
-{
-    background-color: #131921;
+.navbar{
 
-    color: white;
+    background:#131921;
 
-    padding: 15px;
+    color:white;
 
-    display: flex;
+    height:72px;
 
-    align-items: center;
+    display:flex;
 
-    justify-content: space-between;
+    align-items:center;
+
+    gap:35px;
+
+    padding:0 35px;
+}
+.logo{
+
+    font-size:32px;
+
+    font-weight:700;
+
+    white-space:nowrap;
+}
+.search-container{
+
+    flex:1;
+
+    max-width:720px;
+
+    display:flex;
+
+    align-items:center;
+
+    position:relative;
 }
 
-.logo
-{
-    font-size: 28px;
+.search-container input{
 
-    font-weight: bold;
+    width:100%;
+
+    height:46px;
+
+    padding:0 16px;
+
+    border:none;
+
+    border-radius:8px;
+
+    font-size:15px;
+
+    outline:none;
 }
+.search-btn{
 
-.search-container
-{
-    position: relative;
+    width:48px;
 
-    display: flex;
+    height:46px;
 
-    align-items: center;
-}
+    border:none;
 
-.search-container input
-{
-    width: 500px;
+    background:#febd69;
 
-    padding: 10px;
+    cursor:pointer;
 
-    border: none;
+    border-radius:0 8px 8px 0;
 
-    border-radius: 4px;
-}
-
-.search-btn
-{
-    margin-left: 5px;
-
-    background: #febd69;
-
-    border: none;
-
-    padding: 10px;
-
-    cursor: pointer;
+    margin-left:-8px;
 }
 
 .clear-btn
@@ -66,17 +81,26 @@
     cursor: pointer;
 }
 
-.nav-links a
-{
-    color: white;
+.nav-links a{
 
-    text-decoration: none;
+    color:white;
 
-    margin-left: 20px;
+    text-decoration:none;
 
-    font-weight: bold;
+    font-size:16px;
 
-    cursor: pointer;
+    font-weight:600;
+
+    display:flex;
+
+    align-items:center;
+
+    transition:.25s;
+}
+
+.nav-links a:hover{
+
+    color:#febd69;
 }
 
 .nav-links a:hover
@@ -339,4 +363,14 @@
 
 .price-buttons button:hover {
   background: #e68a00;
+}
+.nav-links{
+
+    margin-left:auto;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:30px;
 }
